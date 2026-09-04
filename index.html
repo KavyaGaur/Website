@@ -330,6 +330,350 @@
     .e26m { --era-rim: rgba(212,175,55,0.95); --era-glow: rgba(212,175,55,0.5); border-color: rgba(212,175,55,0.3); }
     .e26r { --era-rim: rgba(255,240,0,0.95); --era-glow: rgba(255,240,0,0.5); border-color: rgba(255,240,0,0.3); }
 
+    /* ==========================================================================
+       LIVE CAREER GOALS TELEMETRY SECTION // SLIDER ENGINE
+       ========================================================================== */
+    .live-goals-sec {
+      position: relative;
+      z-index: 10;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 90px 32px 120px;
+      border-top: 1px solid var(--hair);
+    }
+    .lg-container { max-width: 1200px; margin: 0 auto; }
+    .lg-header { margin-bottom: 36px; text-align: center; }
+    .lg-telemetry-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      color: var(--slate);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--hair);
+      padding: 6px 16px;
+    }
+    .live-dot-pulse {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: #00ff88;
+      border-radius: 50% !important;
+      box-shadow: 0 0 10px #00ff88;
+      animation: livePulse 1.6s infinite;
+      vertical-align: middle;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 10px #00ff88; }
+      50% { opacity: 0.35; transform: scale(0.7); box-shadow: 0 0 2px #00ff88; }
+    }
+    .lg-title {
+      font-family: var(--fd);
+      font-size: clamp(32px, 5vw, 60px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      line-height: 1;
+      color: var(--bone);
+    }
+    .lg-sub {
+      font-size: 11.5px;
+      letter-spacing: 1.5px;
+      color: var(--slate);
+      text-transform: uppercase;
+      max-width: 760px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Stage */
+    .lg-stage {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 32px;
+      align-items: center;
+      background: #080a0e;
+      border: 1px solid var(--hair-b);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.85), inset 0 0 60px rgba(255,255,255,0.015);
+      padding: 40px 36px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .lg-player {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .lg-player-m { text-align: left; }
+    .lg-player-r { text-align: right; }
+    .lg-p-tag {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--slate);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .lg-p-name {
+      font-family: var(--fd);
+      font-size: clamp(24px, 3.5vw, 40px);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .lg-player-m .lg-p-name { color: #f2f4f8; text-shadow: 0 0 25px rgba(0,77,152,0.6); }
+    .lg-player-r .lg-p-name { color: #f2f4f8; text-shadow: 0 0 25px rgba(255,215,0,0.6); }
+
+    .lg-count-display {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .lg-player-r .lg-count-display { align-items: flex-end; }
+    .lg-num {
+      font-family: var(--fd);
+      font-size: clamp(48px, 7vw, 92px);
+      font-weight: 900;
+      line-height: 0.9;
+      color: #fff;
+      will-change: transform;
+    }
+    .lg-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--slate);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* Race meters */
+    .lg-meter-wrap {
+      width: 100%;
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--hair);
+      position: relative;
+      overflow: hidden;
+    }
+    .lg-player-r .lg-meter-wrap {
+      display: flex;
+      justify-content: flex-end;
+    }
+    .lg-meter-bar {
+      height: 100%;
+      transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .lg-bar-m {
+      background: linear-gradient(90deg, #a50044, #004d98, #75aadb);
+      box-shadow: 0 0 16px rgba(117,170,219,0.8);
+    }
+    .lg-bar-r {
+      background: linear-gradient(90deg, #da020e, #ffd700);
+      box-shadow: 0 0 16px rgba(255,215,0,0.8);
+    }
+
+    .lg-breakdown {
+      display: flex;
+      gap: 16px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: var(--slate);
+      text-transform: uppercase;
+    }
+    .lg-player-r .lg-breakdown { justify-content: flex-end; }
+    .lg-breakdown strong { color: var(--bone); }
+
+    /* Center Gauge */
+    .lg-center-gauge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-width: 190px;
+    }
+    .lg-year-box {
+      background: #000;
+      border: 1px solid var(--hair-b);
+      padding: 10px 22px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    }
+    .lg-yr-lbl { font-size: 9px; letter-spacing: 2px; color: var(--slate); text-transform: uppercase; }
+    .lg-year-val {
+      font-family: var(--fd);
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #ffd700;
+      text-shadow: 0 0 18px rgba(255,215,0,0.6);
+    }
+    .lg-margin-badge {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--bone);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--hair);
+      padding: 5px 14px;
+      text-transform: uppercase;
+      font-weight: 700;
+      text-align: center;
+    }
+    .lg-play-btn {
+      background: transparent;
+      border: 1px solid var(--bone);
+      color: var(--bone);
+      font-family: var(--fm);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      padding: 8px 18px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s;
+    }
+    .lg-play-btn:hover {
+      background: var(--bone);
+      color: #000;
+      box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    }
+    .lg-play-btn.playing {
+      border-color: #00ff88;
+      color: #00ff88;
+    }
+
+    /* Slider Track */
+    .lg-slider-panel {
+      background: #080a0e;
+      border: 1px solid var(--hair);
+      padding: 24px 32px 30px;
+      margin-bottom: 24px;
+    }
+    .lg-slider-track-wrap { position: relative; width: 100%; }
+    .lg-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+      border: 1px solid var(--hair);
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+    .lg-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      background: #ffd700;
+      border: 2px solid #fff;
+      box-shadow: 0 0 20px #ffd700, 0 0 40px rgba(255,215,0,0.6);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .lg-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+    .lg-slider-ticks {
+      display: flex;
+      justify-content: space-between;
+    }
+    .lg-slider-ticks .tick {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--slate);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: color 0.2s;
+    }
+    .lg-slider-ticks .tick small {
+      font-size: 8px;
+      color: var(--dim);
+      letter-spacing: 1px;
+    }
+    .lg-slider-ticks .tick:hover,
+    .lg-slider-ticks .tick.active-tick {
+      color: #ffd700;
+    }
+    .lg-slider-ticks .tick.active-tick small {
+      color: var(--bone);
+    }
+
+    /* Milestone Card */
+    .lg-milestone-card {
+      background: #050608;
+      border: 1px solid var(--hair-b);
+      border-left: 3px solid #ffd700;
+      padding: 22px 28px;
+      transition: all 0.3s;
+    }
+    .mc-epoch-tag {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      color: #ffd700;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .mc-title {
+      font-family: var(--fd);
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-transform: uppercase;
+      color: var(--bone);
+      margin-bottom: 10px;
+    }
+    .mc-desc {
+      font-size: 13px;
+      line-height: 1.6;
+      color: #b0b5c0;
+    }
+
+    /* Live badge on codex table */
+    .badge-live {
+      background: rgba(0, 255, 136, 0.15);
+      border: 1px solid #00ff88;
+      color: #00ff88;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 7px;
+      letter-spacing: 1.5px;
+      margin-left: 10px;
+      vertical-align: middle;
+      display: inline-block;
+    }
+    .live-counter {
+      color: #00ff88 !important;
+      text-shadow: 0 0 15px rgba(0,255,136,0.5);
+    }
+    .var-live .glow-txt {
+      color: #ffd700;
+      font-weight: 700;
+    }
+
+    /* Header live button */
+    .e-item-live .e-btn.active {
+      border-bottom-color: #00ff88 !important;
+    }
+    .live-tab-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #00ff88;
+    }
+
     /* CODEX */
     .codex { position: relative; z-index: 10; border-top: 1px solid var(--hair); background: #030405; padding: 100px 32px 140px; }
     .codex-c { max-width: 1200px; margin: 0 auto; }
@@ -601,6 +945,22 @@
         text-align: center;
         margin-top: 30px;
       }
+
+      /* Live Career Goals Mobile */
+      .live-goals-sec { padding: 60px 16px 80px; }
+      .lg-stage {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 24px 18px;
+      }
+      .lg-player-m, .lg-player-r { text-align: center; align-items: center; }
+      .lg-player-r .lg-count-display { align-items: center; }
+      .lg-player-r .lg-meter-wrap { justify-content: flex-start; }
+      .lg-player-r .lg-breakdown { justify-content: center; }
+      .lg-breakdown { justify-content: center; }
+      .lg-center-gauge { order: -1; margin-bottom: 6px; }
+      .lg-slider-panel { padding: 18px 16px 24px; }
+      .lg-slider-ticks .tick small { display: none; }
     }
 
     /* --------------------------------------------------------------------------
@@ -1011,6 +1371,7 @@
       <li class="e-item"><button class="e-btn" onclick="jumpTo('ep4')"><span class="eidx">EPOCH_04</span><span>2016–2022 CONTINENTAL</span></button></li>
       <li class="e-item"><button class="e-btn" onclick="jumpTo('ep5')"><span class="eidx">EPOCH_05</span><span>2023–2025 EXILE REALMS</span></button></li>
       <li class="e-item"><button class="e-btn" onclick="jumpTo('ep6')"><span class="eidx">EPOCH_06</span><span>2026 THE CLIMAX</span></button></li>
+      <li class="e-item e-item-live"><button class="e-btn" onclick="jumpTo('liveGoals')"><span class="eidx">LIVE_FEED</span><span class="live-tab-label"><span class="live-dot-pulse"></span>LIVE TOTAL GOALS</span></button></li>
     </ul>
   </header>
 
@@ -1299,6 +1660,103 @@
     </section>
   </main>
 
+  <!-- Live Goals Section -->
+  <section class="live-goals-sec" id="liveGoals">
+    <div class="lg-container">
+      <div class="lg-header">
+        <div class="lg-telemetry-tag">
+          <span class="live-dot-pulse"></span>
+          REAL-TIME TELEMETRY // CAREER SCORING AUDIT [2003–2026]
+        </div>
+        <h2 class="lg-title">LIVE CAREER GOALS COMPARISON</h2>
+        <p class="lg-sub">DRAG THE CHRONOMETRIC SLIDER OR HIT PLAY TO STREAM THE 23-YEAR RACE FOR THE ALL-TIME SCORING RECORD AS IT EVOLVED MATCH-BY-MATCH.</p>
+      </div>
+
+      <!-- Comparison Stage -->
+      <div class="lg-stage">
+        <!-- Messi Column -->
+        <div class="lg-player lg-player-m">
+          <div>
+            <span class="lg-p-tag">ARGENTINA / BARCELONA / PSG / MIAMI</span>
+            <h3 class="lg-p-name">LIONEL MESSI</h3>
+          </div>
+          <div class="lg-count-display">
+            <div class="lg-num" id="lgMessiCount">850</div>
+            <div class="lg-label">OFFICIAL SENIOR GOALS</div>
+          </div>
+          <div class="lg-meter-wrap">
+            <div class="lg-meter-bar lg-bar-m" id="lgBarM" style="width: 85%;"></div>
+          </div>
+          <div class="lg-breakdown">
+            <span>CLUB: <strong id="lgMessiClub">738</strong></span>
+            <span>INT'L: <strong id="lgMessiIntl">112</strong></span>
+            <span>APPS: <strong id="lgMessiApps">1,090</strong></span>
+          </div>
+        </div>
+
+        <!-- Center Gauge & Playback Controls -->
+        <div class="lg-center-gauge">
+          <div class="lg-year-box">
+            <span class="lg-yr-lbl">ACTIVE CHRONO-EPOCH</span>
+            <span class="lg-year-val" id="sliderYearVal">2026</span>
+          </div>
+          <div class="lg-margin-badge" id="lgMarginBadge">RONALDO +71 GOALS</div>
+          <button class="lg-play-btn" id="playRaceBtn" onclick="toggleRacePlay()">
+            <span id="playIcon">▶</span> <span id="playBtnText">PLAY HISTORICAL RACE</span>
+          </button>
+        </div>
+
+        <!-- Ronaldo Column -->
+        <div class="lg-player lg-player-r">
+          <div>
+            <span class="lg-p-tag">PORTUGAL / SPORTING / UTD / REAL / JUVE / NASSR</span>
+            <h3 class="lg-p-name">CRISTIANO RONALDO</h3>
+          </div>
+          <div class="lg-count-display">
+            <div class="lg-num" id="lgRonaldoCount">921</div>
+            <div class="lg-label">OFFICIAL SENIOR GOALS</div>
+          </div>
+          <div class="lg-meter-wrap">
+            <div class="lg-meter-bar lg-bar-r" id="lgBarR" style="width: 92.1%;"></div>
+          </div>
+          <div class="lg-breakdown">
+            <span>CLUB: <strong id="lgRonaldoClub">786</strong></span>
+            <span>INT'L: <strong id="lgRonaldoIntl">135</strong></span>
+            <span>APPS: <strong id="lgRonaldoApps">1,260</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Chrono Slider -->
+      <div class="lg-slider-panel">
+        <div class="lg-slider-track-wrap">
+          <input type="range" class="lg-slider" id="goalYearSlider" min="2003" max="2026" step="1" value="2026" oninput="onYearSlider(this.value)" aria-label="Timeline Year Slider">
+        </div>
+        <div class="lg-slider-ticks" id="sliderTicks">
+          <div class="tick" onclick="setSliderYear(2003)"><span>'03</span><small>DEBUT</small></div>
+          <div class="tick" onclick="setSliderYear(2006)"><span>'06</span><small>GERMANY</small></div>
+          <div class="tick" onclick="setSliderYear(2008)"><span>'08</span><small>MOSCOW</small></div>
+          <div class="tick" onclick="setSliderYear(2009)"><span>'09</span><small>SEXTUPLE</small></div>
+          <div class="tick" onclick="setSliderYear(2012)"><span>'12</span><small>91-GOALS</small></div>
+          <div class="tick" onclick="setSliderYear(2014)"><span>'14</span><small>DÉCIMA</small></div>
+          <div class="tick" onclick="setSliderYear(2016)"><span>'16</span><small>EURO '16</small></div>
+          <div class="tick" onclick="setSliderYear(2018)"><span>'18</span><small>3-PEAT</small></div>
+          <div class="tick" onclick="setSliderYear(2020)"><span>'20</span><small>750+ G</small></div>
+          <div class="tick" onclick="setSliderYear(2022)"><span>'22</span><small>QATAR</small></div>
+          <div class="tick" onclick="setSliderYear(2024)"><span>'24</span><small>900+ G</small></div>
+          <div class="tick active-tick" onclick="setSliderYear(2026)"><span>'26</span><small>CLIMAX</small></div>
+        </div>
+      </div>
+
+      <!-- Milestone Card -->
+      <div class="lg-milestone-card" id="milestoneCard">
+        <div class="mc-epoch-tag" id="mcEpochTag">CHRONOMETRIC EPOCH: 2026 // THE CLIMAX &amp; IMMORTALITY</div>
+        <h4 class="mc-title" id="mcTitle">CRISTIANO REACHES 921 // MESSI BIDS FAREWELL AT 850</h4>
+        <p class="mc-desc" id="mcDesc">On August 31, 2026, Lionel Messi finalized his international career with 850 official goals and a world-record 44 trophies. Cristiano Ronaldo pushed the immortal scoring benchmark to 921 official career goals, securing undisputed status as the highest goalscorer in association football history.</p>
+      </div>
+    </div>
+  </section>
+
   <!-- Codex -->
   <footer class="codex">
     <div class="codex-c">
@@ -1311,7 +1769,7 @@
             <tr><td class="ml">Ballon d'Or Awards</td><td class="scr" data-count="8">0</td><td class="scr" data-count="5">0</td><td>+3 Messi (All-Time Record)</td></tr>
             <tr><td class="ml">European Golden Shoes</td><td class="scr" data-count="6">0</td><td class="scr" data-count="4">0</td><td>+2 Messi</td></tr>
             <tr><td class="ml">UEFA Champions League Titles</td><td class="scr" data-count="4">0</td><td class="scr" data-count="5">0</td><td>+1 Ronaldo (Modern Record)</td></tr>
-            <tr><td class="ml">Total Official Career Goals</td><td class="scr" data-count="850">0</td><td class="scr" data-count="900">0</td><td>+50+ Ronaldo (All-Time Leader)</td></tr>
+            <tr class="var-live"><td class="ml"><span class="live-dot-pulse"></span> Total Official Career Goals <span class="badge-live">LIVE TELEMETRY</span></td><td class="scr live-counter" id="tableMessiGoals" data-count="850">0</td><td class="scr live-counter" id="tableRonaldoGoals" data-count="921">0</td><td><span class="glow-txt">+71 Ronaldo</span> (All-Time Official Record)</td></tr>
             <tr><td class="ml">Total Career Assists</td><td class="scr" data-count="380">0</td><td class="scr" data-count="255">0</td><td>+125+ Messi</td></tr>
             <tr><td class="ml">FIFA World Cup Trophies</td><td class="scr" data-count="1">0</td><td class="scr" data-count="0">0</td><td>+1 Messi (Golden Ball 2014, 2022)</td></tr>
             <tr><td class="ml">Total Career Team Trophies</td><td class="scr" data-count="44">0</td><td class="scr" data-count="35">0</td><td>+9 Messi (Most Decorated Player)</td></tr>
@@ -1505,7 +1963,8 @@
       ep3: ['rgba(0,77,152,0.2)', 'rgba(254,190,16,0.25)'],
       ep4: ['rgba(117,170,219,0.25)', 'rgba(218,41,28,0.25)'],
       ep5: ['rgba(247,181,205,0.25)', 'rgba(255,240,0,0.2)'],
-      ep6: ['rgba(212,175,55,0.3)', 'rgba(255,240,0,0.3)']
+      ep6: ['rgba(212,175,55,0.3)', 'rgba(255,240,0,0.3)'],
+      liveGoals: ['rgba(0,255,136,0.18)', 'rgba(255,215,0,0.18)']
     };
 
     // RAF Loop
@@ -1588,6 +2047,16 @@
           : 'translateY(60px) skewX(0deg)';
       });
 
+      // Check if Live Career Goals station is in focus
+      const liveSec = document.getElementById('liveGoals');
+      if(liveSec) {
+        const lr = liveSec.getBoundingClientRect();
+        const lc = lr.top + lr.height / 2;
+        if(Math.abs(lc - vc) < minDist) {
+          activeEp = liveSec;
+        }
+      }
+
       // Dynamic era ambient wash
       if(activeEp && eraWash) {
         const cols = eraColors[activeEp.id];
@@ -1601,7 +2070,8 @@
       if(activeEp) {
         const aid = activeEp.id;
         btns.forEach(b => {
-          if(b.getAttribute('onclick').includes(aid)) b.classList.add('active');
+          const oc = b.getAttribute('onclick') || '';
+          if(oc.includes(aid)) b.classList.add('active');
           else b.classList.remove('active');
         });
       }
@@ -1665,6 +2135,152 @@
     }
 
     requestAnimationFrame(render);
+
+    // ======================================================================
+    // LIVE CAREER GOAL TELEMETRY & HISTORICAL SLIDER ENGINE
+    // ======================================================================
+    const goalDataByYear = {
+      2003: { m: 0, mC: 0, mI: 0, mA: 0, r: 1, rC: 1, rI: 0, rA: 18, tag: "2003 // TEENAGE PRODIGIES", title: "CRISTIANO EMERGES AT OLD TRAFFORD", desc: "Cristiano Ronaldo makes Manchester United debut with blistering stepovers under Sir Alex Ferguson, scoring his first free-kick vs Portsmouth. Messi dominates Barcelona's La Masia." },
+      2004: { m: 0, mC: 0, mI: 0, mA: 9, r: 14, rC: 7, rI: 7, rA: 59, tag: "2004 // FIRST SENIOR FLASHES", title: "MESSI DEBUTS // CRISTIANO AT EURO 2004", desc: "Cristiano reaches the Euro 2004 final with Portugal, tallying 14 career goals. Messi makes his FC Barcelona first-team debut against Espanyol on October 16, 2004." },
+      2005: { m: 3, mC: 3, mI: 0, mA: 34, r: 29, rC: 20, rI: 9, rA: 109, tag: "2005 // RONALDINHO LOB ASSIST", title: "FIRST SENIOR GOALS UNLOCKED", desc: "Messi scores his maiden Barcelona goal with a calm lob off Ronaldinho's pass against Albacete. Ronaldo becomes a regular matchwinner for Sir Alex Ferguson." },
+      2006: { m: 15, mC: 13, mI: 2, mA: 67, r: 54, rC: 42, rI: 12, rA: 167, tag: "2006 // WORLD CUP DEBUTS", title: "GERMANY 2006 WORLD STAGE", desc: "Both prodigies play their first World Cups in Germany. Ronaldo helps Portugal reach the semi-finals; Messi scores against Serbia & Montenegro on debut." },
+      2007: { m: 46, mC: 40, mI: 6, mA: 122, r: 88, rC: 73, rI: 15, rA: 228, tag: "2007 // THE CLÁSICO HATTRICK", title: "GLOBAL SUPERSTARDOM CONFIRMED", desc: "Messi stuns the world with a 19-year-old Clásico hat-trick vs Real Madrid at Camp Nou and a Maradona-esque solo goal against Getafe. Ronaldo wins Premier League." },
+      2008: { m: 68, mC: 58, mI: 10, mA: 170, r: 123, rC: 102, rI: 21, rA: 284, tag: "2008 // MOSCOW & FIRST BALLON D'OR", title: "CRISTIANO CONQUERS EUROPE", desc: "Ronaldo scores 42 goals in 07/08, lifting the Premier League and UEFA Champions League in Moscow rain to claim his maiden Ballon d'Or. Messi wins Olympic Gold in Beijing." },
+      2009: { m: 109, mC: 96, mI: 13, mA: 234, r: 153, rC: 131, rI: 22, rA: 337, tag: "2009 // ROME & THE HISTORIC SEXTUPLE", title: "MESSI HEADS TO GLORY", desc: "Messi heads past van der Sar in Rome as Barcelona defeat Manchester United 2-0 to complete the immortal Sextuple. Messi claims his first Ballon d'Or. Ronaldo signs for Real Madrid." },
+      2010: { m: 169, mC: 154, mI: 15, mA: 298, r: 201, rC: 176, rI: 25, rA: 396, tag: "2010 // EL CLÁSICO TITANS CLASH", title: "WAR OF THE SPANISH CAPITALS", desc: "The greatest individual rivalry in sports history begins in earnest in La Liga. Mourinho and Guardiola collide while Messi and Ronaldo trade record-shattering goal tallies." },
+      2011: { m: 242, mC: 223, mI: 19, mA: 368, r: 261, rC: 229, rI: 32, rA: 456, tag: "2011 // WEMBLEY MASTERPIECE", title: "UNSTOPPABLE DUAL ARTISTRY", desc: "Messi delivers a masterclass at Wembley as Barça win Champions League 3-1 vs United. Ronaldo hits 40 La Liga goals to claim the European Golden Shoe." },
+      2012: { m: 333, mC: 302, mI: 31, mA: 437, r: 324, rC: 287, rI: 37, rA: 527, tag: "2012 // THE 91-GOAL IMMORTALITY", title: "MESSI BREAKS GERD MÜLLER'S RECORD", desc: "Lionel Messi scores an unfathomable 91 goals in 69 matches in 2012, overtaking Gerd Müller's 40-year-old world record. For the first time, Messi overtakes Ronaldo's career tally (333 to 324)!" },
+      2013: { m: 378, mC: 341, mI: 37, mA: 484, r: 393, rC: 346, rI: 47, rA: 596, tag: "2013 // SOLNA PLAYOFF FIREWORKS", title: "RONALDO'S 69-GOAL BALLON D'OR YEAR", desc: "Ronaldo blasts four goals in the World Cup playoff against Ibrahimović's Sweden to deliver Portugal to Brazil 2014, claiming his second Ballon d'Or." },
+      2014: { m: 436, mC: 391, mI: 45, mA: 550, r: 454, rC: 402, rI: 52, rA: 656, tag: "2014 // LA DÉCIMA & MARACANÃ HEARTBREAK", title: "MADRID'S 10TH // ARGENTINA'S FINAL", desc: "Ronaldo smashes the UCL single-season scoring record with 17 goals as Real Madrid clinch La Décima in Lisbon. Messi captains Argentina to the Maracanã World Cup Final." },
+      2015: { m: 488, mC: 439, mI: 49, mA: 611, r: 511, rC: 456, rI: 55, rA: 713, tag: "2015 // BERLIN TREBLE & MSN TRIDENT", title: "MESSI RECLAIMS WORLD NO. 1", desc: "Messi orchestrates Barcelona's second historic Treble in Berlin, anchoring the lethal MSN trident (122 goals) and collecting his 5th Ballon d'Or." },
+      2016: { m: 547, mC: 490, mI: 57, mA: 673, r: 566, rC: 498, rI: 68, rA: 770, tag: "2016 // PARIS TRIUMPH FOR PORTUGAL", title: "RONALDO LIFTS EURO 2016", desc: "Cristiano leads Portugal to their first-ever major international trophy at Euro 2016, along with another Champions League crown in Milan. Ronaldo wins 4th Ballon d'Or." },
+      2017: { m: 601, mC: 540, mI: 61, mA: 737, r: 619, rC: 540, rI: 79, rA: 826, tag: "2017 // BERNABÉU SHIRT CELEBRATION", title: "BERNABÉU 500TH GOAL ICON", desc: "Messi scores his 500th Barça goal in the 92nd minute at the Bernabéu and displays his shirt to the stunned stadium. Ronaldo guides Real Madrid to back-to-back UCL titles in Cardiff." },
+      2018: { m: 652, mC: 587, mI: 65, mA: 791, r: 668, rC: 583, rI: 85, rA: 879, tag: "2018 // KYIV THREE-PEAT & BICYCLE KICK", title: "MADRID HISTORIC UCL THREE-PEAT", desc: "Ronaldo scores an unforgettable overhead bicycle kick in Turin and lifts a 3rd straight Champions League title before transferring to Juventus. Both players pass 650 goals." },
+      2019: { m: 702, mC: 632, mI: 70, mA: 849, r: 707, rC: 608, rI: 99, rA: 928, tag: "2019 // 6TH BALLON D'OR RECORD", title: "MESSI BECOMES FIRST TO SIX", desc: "Messi collects his sixth Ballon d'Or and European Golden Shoe, scoring his 600th Barcelona goal with a stunning 35-yard free-kick vs Liverpool. Ronaldo wins Serie A & Nations League." },
+      2020: { m: 728, mC: 657, mI: 71, mA: 893, r: 751, rC: 649, rI: 102, rA: 967, tag: "2020 // 750 CAREER GOALS CROSSED", title: "PÉLÉ RECORD SURPASSED", desc: "Both icons eclipse Pelé's official goal tallies. Despite the pandemic-disrupted calendar, Cristiano reaches 750 career goals and Messi breaks Pelé's single-club record." },
+      2021: { m: 756, mC: 676, mI: 80, mA: 954, r: 798, rC: 683, rI: 115, rA: 1028, tag: "2021 // MARACANÃ GLORY & BALLON D'OR #7", title: "MESSI ENDS ARGENTINA DROUGHT", desc: "Messi captains Argentina to Copa América triumph in Rio, ending a 28-year senior trophy drought and lifting Ballon d'Or #7. Ronaldo breaks all-time men's international scoring record (115)." },
+      2022: { m: 793, mC: 695, mI: 98, mA: 1005, r: 819, rC: 701, rI: 118, rA: 1074, tag: "2022 // LUSAIL ETERNITY & WORLD CUP", title: "MESSI COMPLETES FOOTBALL AT LUSAIL", desc: "Messi scores 7 goals and wins the Golden Ball as Argentina win the greatest World Cup final in history. Both legends stand above 800+ official goals in world football history." },
+      2023: { m: 821, mC: 715, mI: 106, mA: 1049, r: 873, rC: 745, rI: 128, rA: 1133, tag: "2023 // BALLON D'OR #8 & AL NASSR EXPLOSION", title: "MESSI #8 // RONALDO TOP SCORER IN 2023", desc: "Messi claims an untouchable 8th Ballon d'Or in Paris and brings Leagues Cup glory to Inter Miami. Ronaldo finishes 2023 as the world's top goalscorer with 54 goals for Al-Nassr and Portugal." },
+      2024: { m: 850, mC: 738, mI: 112, mA: 1083, r: 916, rC: 783, rI: 133, rA: 1238, tag: "2024 // 900TH OFFICIAL GOAL RECORD", title: "CRISTIANO SMASHES 900-GOAL BARRIER", desc: "Cristiano Ronaldo becomes the first footballer in history to reach 900 official career goals against Croatia. Messi captains Argentina to back-to-back Copa América glory." },
+      2025: { m: 850, mC: 738, mI: 112, mA: 1087, r: 918, rC: 784, rI: 134, rA: 1250, tag: "2025 // TWILIGHT DOMINANCE", title: "RECORD BOOKS CEMENTED", desc: "Ronaldo continues extending his all-time scoring tally with Al-Nassr and Portugal. Messi guides Inter Miami toward historic MLS campaigns." },
+      2026: { m: 850, mC: 738, mI: 112, mA: 1090, r: 921, rC: 786, rI: 135, rA: 1260, tag: "2026 // THE CLIMAX ARCHIVE", title: "CRISTIANO REACHES 921 // MESSI FAREWELL", desc: "On August 31, 2026, Lionel Messi finalized his international career with 850 official goals and a world-record 44 trophies. Cristiano Ronaldo pushed the immortal scoring benchmark to 921 official career goals, securing undisputed status as the highest goalscorer in association football history." }
+    };
+
+    const slider = $('#goalYearSlider');
+    const yrVal = $('#sliderYearVal');
+    const lgMCount = $('#lgMessiCount');
+    const lgRCount = $('#lgRonaldoCount');
+    const lgMClub = $('#lgMessiClub');
+    const lgMIntl = $('#lgMessiIntl');
+    const lgMApps = $('#lgMessiApps');
+    const lgRClub = $('#lgRonaldoClub');
+    const lgRIntl = $('#lgRonaldoIntl');
+    const lgRApps = $('#lgRonaldoApps');
+    const barM = $('#lgBarM');
+    const barR = $('#lgBarR');
+    const marginBadge = $('#lgMarginBadge');
+    const playBtn = $('#playRaceBtn');
+    const playIcon = $('#playIcon');
+    const playText = $('#playBtnText');
+    const epTag = $('#mcEpochTag');
+    const mcTitle = $('#mcTitle');
+    const mcDesc = $('#mcDesc');
+    const ticks = $$('#sliderTicks .tick');
+
+    let playInterval = null;
+
+    function updateGoalSlider(year) {
+      const d = goalDataByYear[year];
+      if(!d) return;
+
+      if(slider && slider.value != year) slider.value = year;
+      if(yrVal) yrVal.textContent = year;
+
+      if(lgMCount) lgMCount.textContent = d.m;
+      if(lgRCount) lgRCount.textContent = d.r;
+
+      if(lgMClub) lgMClub.textContent = d.mC;
+      if(lgMIntl) lgMIntl.textContent = d.mI;
+      if(lgMApps) lgMApps.textContent = d.mA.toLocaleString();
+
+      if(lgRClub) lgRClub.textContent = d.rC;
+      if(lgRIntl) lgRIntl.textContent = d.rI;
+      if(lgRApps) lgRApps.textContent = d.rA.toLocaleString();
+
+      // Scale bars relative to 1000 goals max
+      if(barM) barM.style.width = Math.min(100, (d.m / 1000 * 100)).toFixed(1) + '%';
+      if(barR) barR.style.width = Math.min(100, (d.r / 1000 * 100)).toFixed(1) + '%';
+
+      // Margin
+      if(marginBadge) {
+        const diff = d.r - d.m;
+        if(diff > 0) {
+          marginBadge.textContent = 'RONALDO +' + diff + ' GOALS';
+        } else if(diff < 0) {
+          marginBadge.textContent = 'MESSI +' + Math.abs(diff) + ' GOALS';
+        } else {
+          marginBadge.textContent = 'LEVEL RACE (' + d.m + ' GOALS)';
+        }
+      }
+
+      // Milestone card
+      if(epTag) epTag.textContent = 'CHRONOMETRIC EPOCH: ' + d.tag;
+      if(mcTitle) mcTitle.textContent = d.title;
+      if(mcDesc) mcDesc.textContent = d.desc;
+
+      // Active tick
+      ticks.forEach(t => {
+        const txt = t.querySelector('span') ? t.querySelector('span').textContent.trim() : '';
+        const shortYr = "'" + String(year).slice(-2);
+        if(txt === shortYr) t.classList.add('active-tick');
+        else t.classList.remove('active-tick');
+      });
+    }
+
+    function toggleRacePlay() {
+      if(playInterval) {
+        clearInterval(playInterval);
+        playInterval = null;
+        if(playBtn) playBtn.classList.remove('playing');
+        if(playIcon) playIcon.textContent = '▶';
+        if(playText) playText.textContent = 'PLAY HISTORICAL RACE';
+      } else {
+        let cur = parseInt(slider.value) || 2026;
+        if(cur >= 2026) {
+          cur = 2003;
+          updateGoalSlider(cur);
+        }
+        if(playBtn) playBtn.classList.add('playing');
+        if(playIcon) playIcon.textContent = '⏸';
+        if(playText) playText.textContent = 'PAUSE SIMULATION';
+
+        playInterval = setInterval(() => {
+          cur++;
+          if(cur > 2026) {
+            clearInterval(playInterval);
+            playInterval = null;
+            if(playBtn) playBtn.classList.remove('playing');
+            if(playIcon) playIcon.textContent = '▶';
+            if(playText) playText.textContent = 'REPLAY HISTORICAL RACE';
+            return;
+          }
+          updateGoalSlider(cur);
+        }, 650);
+      }
+    }
+
+    window.onYearSlider = function(val) {
+      if(playInterval) toggleRacePlay();
+      updateGoalSlider(parseInt(val));
+    };
+    window.setSliderYear = function(yr) {
+      if(playInterval) toggleRacePlay();
+      updateGoalSlider(yr);
+    };
+    window.toggleRacePlay = toggleRacePlay;
+
+    // Initialize slider with climax year 2026
+    updateGoalSlider(2026);
 
     // Scrubber Jump (dynamic offset based on actual header height)
     window.jumpTo = function(id) {
