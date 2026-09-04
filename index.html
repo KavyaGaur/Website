@@ -282,17 +282,17 @@
       filter: drop-shadow(0 35px 60px rgba(0,0,0,0.95)) drop-shadow(0 0 35px var(--era-rim, #fff)) drop-shadow(0 0 80px var(--era-glow, rgba(255,255,255,0.3)));
     }
 
-    /* EPOCH 02 BALLON D'OR CUTOUTS: BALANCED, SCALED & VERTICALLY CENTERED */
+    /* EPOCH 02 BALLON D'OR CUTOUTS: ALIGNED TO BOTTOM CORNERS VERTICALLY */
     .e09m .c-img, .e08r .c-img {
-      top: 50%;
-      bottom: auto;
-      transform: translateY(-50%) translateZ(100px);
-      align-items: center;
+      top: auto;
+      bottom: 0px;
+      transform: translateZ(100px);
+      align-items: flex-end;
       justify-content: center;
-      height: 480px;
+      height: 500px;
     }
     .e09m:hover .c-img, .e08r:hover .c-img {
-      transform: translateY(-50%) translateZ(140px) scale(1.06);
+      transform: translateZ(140px) scale(1.06);
       transition-delay: 0s;
     }
     .e09m .c-img {
@@ -300,11 +300,11 @@
       right: 15px;
     }
     .e08r .c-img {
-      width: 330px;
+      width: 340px;
       left: 15px;
     }
     .e09m .c-img img, .e08r .c-img img {
-      max-height: 440px;
+      max-height: 470px;
       max-width: 100%;
       object-fit: contain;
     }
