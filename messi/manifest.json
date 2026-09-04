@@ -1,0 +1,98 @@
+[
+  {
+    "id": "MESSI_2004",
+    "file": "messi/MESSI_2004.png",
+    "era": "2004",
+    "player": "messi",
+    "title": "Lionel Messi 2004 Barcelona Debut Era",
+    "clubColors": [
+      "#004D98",
+      "#A50044",
+      "#EDBB00"
+    ],
+    "width": 1017,
+    "height": 1600,
+    "fileSizeBytes": 1147644,
+    "url": "https://www.footyrenders.com/render/Lionel-Messi6.png"
+  },
+  {
+    "id": "MESSI_2009",
+    "file": "messi/MESSI_2009.png",
+    "era": "2009",
+    "player": "messi",
+    "title": "Lionel Messi 2009 Rome Champions League Sextuple Celebration",
+    "clubColors": [
+      "#004D98",
+      "#A50044",
+      "#EDBB00"
+    ],
+    "width": 1618,
+    "height": 2160,
+    "fileSizeBytes": 1078765,
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/69/Celebrando_la_Copa_de_Campeones_2008-09_Cropped.jpg"
+  },
+  {
+    "id": "MESSI_2012",
+    "file": "messi/MESSI_2012.png",
+    "era": "2012",
+    "player": "messi",
+    "title": "Lionel Messi 2012 91 Goals Record Celebration",
+    "clubColors": [
+      "#004D98",
+      "#A50044",
+      "#FFED02"
+    ],
+    "width": 1088,
+    "height": 1752,
+    "fileSizeBytes": 1786338,
+    "url": "https://www.footyrenders.com/render/lionel-messi-117.png"
+  },
+  {
+    "id": "MESSI_2022",
+    "file": "messi/MESSI_2022.png",
+    "era": "2022",
+    "player": "messi",
+    "title": "Lionel Messi 2022 World Cup Lusail Champion Celebration",
+    "clubColors": [
+      "#75AADB",
+      "#FFFFFF",
+      "#D4AF37"
+    ],
+    "width": 2500,
+    "height": 1977,
+    "fileSizeBytes": 4922967,
+    "url": "https://www.footyrenders.com/render/lionel-messi-405.png"
+  },
+  {
+    "id": "MESSI_2023",
+    "file": "messi/MESSI_2023.png",
+    "era": "2023",
+    "player": "messi",
+    "title": "Lionel Messi Inter Miami CF Pink Kit Celebration",
+    "clubColors": [
+      "#F7B5CD",
+      "#231F20",
+      "#FFFFFF"
+    ],
+    "width": 3185,
+    "height": 3934,
+    "fileSizeBytes": 8610524,
+    "url": "https://www.footyrenders.com/render/lionel-messi-408.png"
+  },
+  {
+    "id": "MESSI_2026_RETIREMENT",
+    "file": "messi/MESSI_2026_RETIREMENT.png",
+    "era": "2026",
+    "player": "messi",
+    "title": "Lionel Messi 2026 Argentina Retirement Final Wave",
+    "clubColors": [
+      "#75AADB",
+      "#D4AF37",
+      "#001A33"
+    ],
+    "width": 1986,
+    "height": 1696,
+    "fileSizeBytes": 3123756,
+    "url": "https://www.footyrenders.com/render/lionel-messi-404.png"
+  }
+]

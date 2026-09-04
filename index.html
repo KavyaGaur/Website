@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARCHIVAL DOSSIER // MESSI vs RONALDO [2003–2026]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       HYPER-KINETIC 2.5D ENGINE // CRT + SCROLL-VELOCITY PHYSICS + 3D DEPTH
+       ========================================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border-radius: 0 !important; }
+
+    :root {
+      --void: #050608;
+      --card-bg: #0a0c10;
+      --bone: #f2f4f8;
+      --slate: #838896;
+      --dim: #3f4452;
+      --hair: rgba(255,255,255,0.09);
+      --hair-b: rgba(255,255,255,0.25);
+      --fd: 'Syne', sans-serif;
+      --fm: 'JetBrains Mono', monospace;
+      --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --sv: 0;
+      --era-a1: rgba(0,77,152,0);
+      --era-a2: rgba(165,0,68,0);
+    }
+
+    html {
+      background: var(--void);
+      color: var(--bone);
+      font-family: var(--fm);
+      min-height: 100vh;
+      overflow-x: clip;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      scroll-behavior: smooth;
+    }
+
+    body { background: var(--void); min-height: 100vh; overflow-x: clip; position: relative; }
+
+    /* CRT BROADCAST OVERLAYS */
+    .crt-scan {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9998;
+      background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+    }
+    .crt-vig {
+      position: fixed; inset: 0; pointer-events: none; z-index: 9997;
+      background: radial-gradient(ellipse 70% 70% at 50% 50%, transparent 50%, rgba(0,0,0,0.55) 100%);
+    }
+
+    /* Dynamic Era Ambient Lighting (JS shifts via CSS vars) */
+    .era-wash {
+      position: fixed; inset: 0; pointer-events: none; z-index: 3;
+      background: radial-gradient(ellipse 80% 60% at 25% 50%, var(--era-a1), transparent 70%),
+                  radial-gradient(ellipse 80% 60% at 75% 50%, var(--era-a2), transparent 70%);
+      transition: background 0.8s ease;
+      opacity: 0.45;
+    }
+
+    .grid-bg {
+      position: fixed; inset: 0; pointer-events: none; z-index: 1;
+      background-image: linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 1px),
+                         linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    .spot {
+      position: fixed; width: 700px; height: 700px; border-radius: 50% !important;
+      background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 65%);
+      pointer-events: none; z-index: 2; transform: translate(-50%,-50%); will-change: left, top;
+    }
+
+    /* VELOCITY HUD */
+    .vel-hud {
+      position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+      font-family: var(--fm); font-size: 10px; letter-spacing: 1px;
+      color: var(--dim); background: rgba(5,6,8,0.85);
+      border: 1px solid var(--hair); padding: 6px 12px;
+      pointer-events: none; text-transform: uppercase;
+    }
+    .vel-hud .vv { color: var(--bone); font-weight: 700; }
+
+    /* HEADER */
+    .t-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(5,6,8,0.97); border-bottom: 1px solid var(--hair);
+    }
+    .h-laser {
+      position: absolute; bottom: 0; left: 0; height: 2px; width: 0%;
+      background: linear-gradient(90deg, #004d98, #fff, #ffd700);
+      box-shadow: 0 0 12px rgba(255,255,255,0.9); z-index: 1001;
+    }
+    .h-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 32px; border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 11px; letter-spacing: 1.5px; color: var(--slate); text-transform: uppercase;
+    }
+    .h-id { display: flex; align-items: center; gap: 12px; color: var(--bone); font-weight: 700; }
+    .h-id .ct { background: rgba(255,255,255,0.08); padding: 2px 8px; border: 1px solid var(--hair-b); }
+    .h-coords { display: flex; gap: 28px; }
+    .h-coords strong { color: var(--bone); }
+
+    .e-scrub { display: flex; padding: 0; margin: 0; list-style: none; border-top: 1px solid rgba(255,255,255,0.03); overflow-x: auto; }
+    .e-item { flex: 1; min-width: 150px; border-right: 1px solid var(--hair); }
+    .e-item:last-child { border-right: none; }
+    .e-btn {
+      width: 100%; background: transparent; border: none; color: var(--slate);
+      font-family: var(--fm); font-size: 11px; font-weight: 700; padding: 11px 16px;
+      text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 3px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .e-btn .eidx { font-size: 9px; color: var(--dim); letter-spacing: 2px; }
+    .e-btn:hover { background: rgba(255,255,255,0.05); color: var(--bone); }
+    .e-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-bottom: 2px solid var(--bone); }
+    .e-btn.active .eidx { color: var(--bone); }
+
+    /* HERO */
+    .hero {
+      position: relative; z-index: 10; padding: 155px 32px 70px; max-width: 1440px; margin: 0 auto;
+      border-bottom: 1px solid var(--hair);
+    }
+    .hero-class {
+      display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--slate); margin-bottom: 24px; padding-bottom: 12px;
+      border-bottom: 1px dashed rgba(255,255,255,0.08);
+    }
+    .hero-grid { display: grid; grid-template-columns: 1fr auto 1fr; align-items: baseline; gap: 32px; margin-bottom: 20px; }
+    .dn {
+      font-family: var(--fd); font-size: clamp(48px,7vw,96px); font-weight: 900;
+      letter-spacing: -2px; line-height: 0.9; text-transform: uppercase; will-change: text-shadow;
+    }
+    .dn-l { text-align: left; }
+    .dn-r { text-align: right; }
+    .vs { font-family: var(--fm); font-size: 20px; font-weight: 700; color: var(--dim); border: 1px solid var(--hair); padding: 6px 14px; letter-spacing: 2px; }
+    .hero-sub { display: flex; justify-content: space-between; color: var(--slate); font-size: 12px; margin-top: 18px; }
+
+    /* TIMELINE */
+    .tl { position: relative; z-index: 10; max-width: 1440px; margin: 0 auto; padding: 80px 32px 180px; }
+    .spine { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: rgba(255,255,255,0.06); transform: translateX(-50%); z-index: 20; }
+    .spine-beam { position: absolute; top: 0; left: 0; width: 100%; height: 0%; background: linear-gradient(180deg, #004d98, #fff 60%, #ffd700); box-shadow: 0 0 18px #fff, 0 0 40px rgba(255,255,255,0.3); }
+    .spine-dot { position: absolute; top: 0; left: -5px; width: 12px; height: 52px; background: var(--bone); box-shadow: 0 0 24px rgba(255,255,255,0.95), 0 0 60px rgba(255,255,255,0.4); will-change: transform; pointer-events: none; z-index: 25; }
+
+    /* EPOCH BLOCKS */
+    .ep {
+      position: relative; margin-bottom: 220px;
+      opacity: 0; transform: translateY(60px);
+      transition: opacity 0.7s ease, transform 0.7s var(--ease);
+    }
+    .ep.iv { opacity: 1; transform: translateY(0); }
+
+    .ep-mark { position: absolute; top: 30px; left: 50%; transform: translate(-50%,0); z-index: 30; display: flex; flex-direction: column; align-items: center; gap: 6px; pointer-events: none; }
+    .ep-bkt { background: #000; border: 1px solid var(--hair-b); color: var(--slate); font-size: 11px; font-weight: 800; letter-spacing: 2.5px; padding: 5px 16px; text-transform: uppercase; white-space: nowrap; transition: all 0.4s; }
+    .ep.iv .ep-bkt { border-color: var(--bone); color: var(--bone); box-shadow: 0 0 24px rgba(255,255,255,0.3); }
+    .ep-dot { width: 10px; height: 10px; background: var(--slate); transition: all 0.4s; }
+    .ep.iv .ep-dot { background: #fff; box-shadow: 0 0 16px #fff, 0 0 40px rgba(255,255,255,0.5); }
+
+    .duel { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; }
+    .ps { position: relative; perspective: 1200px; }
+    .ps-m { padding-right: 20px; }
+    .ps-r { padding-left: 20px; }
+
+    /* ==========================================================================
+       UNIFIED 3D CARD STAGE // OVERLAPPING CUTOUT DEPTH
+       ========================================================================== */
+    .card {
+      position: relative; display: block;
+      background: var(--card-bg); border: 1px solid var(--hair);
+      padding: 44px 38px 50px; min-height: 620px;
+      transform-style: preserve-3d; will-change: transform; cursor: crosshair;
+      transition: border-color 0.3s, box-shadow 0.4s;
+    }
+    .card::before {
+      content: ""; position: absolute; top: -1px; left: -1px;
+      width: 16px; height: 16px; border-top: 2px solid var(--bone); border-left: 2px solid var(--bone);
+      pointer-events: none; z-index: 50;
+    }
+    .card::after {
+      content: ""; position: absolute; bottom: -1px; right: -1px;
+      width: 16px; height: 16px; border-bottom: 2px solid var(--bone); border-right: 2px solid var(--bone);
+      pointer-events: none; z-index: 50;
+    }
+    .ep.iv .card { border-color: rgba(255,255,255,0.18); }
+    .card:hover {
+      border-color: var(--bone);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.95), 0 0 50px var(--era-glow, rgba(255,255,255,0.15)), inset 0 0 80px rgba(255,255,255,0.02);
+    }
+
+    /* Z:-100px Giant Year Watermark */
+    .c-year {
+      position: absolute; top: -10px; right: 10px;
+      font-family: var(--fd); font-size: clamp(140px,16vw,220px); font-weight: 900;
+      color: rgba(255,255,255,0.07); line-height: 0.75; letter-spacing: -8px;
+      pointer-events: none; user-select: none; z-index: 1;
+      transform: translateZ(-100px); transform-style: preserve-3d; mix-blend-mode: overlay;
+    }
+
+    /* Z:0 Text Block */
+    .c-meta {
+      position: relative; z-index: 10; display: flex; flex-direction: column;
+      max-width: 65%; transform: translateZ(0px); transform-style: preserve-3d;
+    }
+    .c-pill { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--slate); text-transform: uppercase; margin-bottom: 14px; border-left: 2px solid var(--bone); padding-left: 8px; }
+    .c-title { font-family: var(--fd); font-size: 34px; font-weight: 900; letter-spacing: -1px; line-height: 1.05; text-transform: uppercase; margin-bottom: 6px; will-change: text-shadow; }
+    .c-sub { font-size: 11px; font-weight: 600; letter-spacing: 1px; color: var(--slate); text-transform: uppercase; margin-bottom: 18px; }
+    .c-body { font-size: 13px; line-height: 1.65; color: #b0b5c0; margin-bottom: 26px; border-top: 1px solid var(--hair); padding-top: 16px; }
+
+    /* Z:+60px Stats & Stamp */
+    .c-stats {
+      position: relative; z-index: 20; display: grid; grid-template-columns: repeat(3,1fr);
+      border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
+      margin-bottom: 20px; background: rgba(0,0,0,0.5);
+      transform: translateZ(60px); transform-style: preserve-3d;
+    }
+    .sc { padding: 12px 10px; border-right: 1px solid var(--hair); }
+    .sc:last-child { border-right: none; }
+    .sv { font-family: var(--fd); font-size: 28px; font-weight: 900; letter-spacing: -0.5px; line-height: 1; margin-bottom: 4px; }
+    .sk { font-size: 9px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 1px; }
+    .c-stamp {
+      display: inline-flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase; background: #000; border: 1px solid var(--hair-b);
+      padding: 6px 12px; align-self: flex-start;
+      transform: translateZ(60px); transform-style: preserve-3d;
+    }
+
+    /* Ronaldo (right-side) cards: text pushed to right, image on left */
+    .ps-r .c-meta {
+      margin-left: auto;
+      margin-right: 0;
+      text-align: right;
+      align-items: flex-end;
+    }
+    .ps-r .c-pill {
+      border-left: none;
+      border-right: 2px solid var(--bone);
+      padding-left: 0;
+      padding-right: 8px;
+    }
+    .ps-r .c-stamp {
+      align-self: flex-end;
+    }
+    .ps-r .c-year {
+      right: auto;
+      left: 10px;
+    }
+
+    /* Z:+100px PLAYER CUTOUT — BREAKS CARD BORDERS */
+    .c-img {
+      position: absolute; bottom: -40px; width: 340px; height: 520px;
+      pointer-events: none; z-index: 30;
+      transform: translateZ(100px); transform-style: preserve-3d;
+      display: flex; align-items: flex-end; justify-content: center; overflow: visible;
+    }
+    .ps-m .c-img { right: -45px; }
+    .ps-r .c-img { left: -45px; }
+    .c-img img {
+      max-width: 100%; max-height: 100%; object-fit: contain;
+      filter: drop-shadow(0 25px 40px rgba(0,0,0,0.95)) drop-shadow(0 0 20px var(--era-rim, rgba(255,255,255,0.15)));
+      will-change: transform, filter; transition: transform 0.3s var(--ease), filter 0.4s;
+    }
+    .card:hover .c-img { transform: translateZ(140px) scale(1.06); }
+    .card:hover .c-img img {
+      filter: drop-shadow(0 35px 60px rgba(0,0,0,0.95)) drop-shadow(0 0 35px var(--era-rim, #fff)) drop-shadow(0 0 80px var(--era-glow, rgba(255,255,255,0.3)));
+    }
+
+    /* Era Accents */
+    .e04m { --era-rim: rgba(0,77,152,0.9); --era-glow: rgba(0,77,152,0.4); }
+    .e03r { --era-rim: rgba(0,128,80,0.9); --era-glow: rgba(0,128,80,0.4); }
+    .e08r { --era-rim: rgba(218,2,14,0.9); --era-glow: rgba(218,2,14,0.4); }
+    .e09m { --era-rim: rgba(165,0,68,0.9); --era-glow: rgba(165,0,68,0.4); }
+    .e12m { --era-rim: rgba(255,237,2,0.85); --era-glow: rgba(255,237,2,0.35); }
+    .e14r { --era-rim: rgba(254,190,16,0.9); --era-glow: rgba(254,190,16,0.4); }
+    .e16r { --era-rim: rgba(218,41,28,0.9); --era-glow: rgba(218,41,28,0.4); }
+    .e22m { --era-rim: rgba(117,170,219,0.95); --era-glow: rgba(117,170,219,0.45); }
+    .e23m { --era-rim: rgba(247,181,205,0.9); --era-glow: rgba(247,181,205,0.4); }
+    .e23r { --era-rim: rgba(255,240,0,0.9); --era-glow: rgba(255,240,0,0.4); }
+    .e26m { --era-rim: rgba(212,175,55,0.95); --era-glow: rgba(212,175,55,0.5); border-color: rgba(212,175,55,0.3); }
+    .e26r { --era-rim: rgba(255,240,0,0.95); --era-glow: rgba(255,240,0,0.5); border-color: rgba(255,240,0,0.3); }
+
+    /* CODEX */
+    .codex { position: relative; z-index: 10; border-top: 1px solid var(--hair); background: #030405; padding: 100px 32px 140px; }
+    .codex-c { max-width: 1200px; margin: 0 auto; }
+    .codex-st { font-size: 11px; letter-spacing: 3px; color: var(--slate); text-transform: uppercase; margin-bottom: 12px; }
+    .codex-h { font-family: var(--fd); font-size: clamp(32px,5vw,64px); font-weight: 900; letter-spacing: -1px; text-transform: uppercase; margin-bottom: 40px; }
+    .codex-t { width: 100%; border-collapse: collapse; border: 1px solid var(--hair); font-family: var(--fm); }
+    .codex-t th, .codex-t td { border: 1px solid var(--hair); padding: 20px 24px; text-align: left; }
+    .codex-t th { font-size: 11px; color: var(--slate); letter-spacing: 2px; text-transform: uppercase; background: rgba(255,255,255,0.03); }
+    .codex-t td { font-size: 14px; color: #c0c4cc; }
+    .codex-t .ml { font-weight: 700; color: var(--bone); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
+    .codex-t .scr { font-family: var(--fd); font-size: 24px; font-weight: 900; color: var(--bone); }
+    .codex-f { margin-top: 40px; font-size: 10px; letter-spacing: 1.5px; color: var(--dim); text-transform: uppercase; display: flex; justify-content: space-between; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1100px) {
+      .spine { left: 24px; transform: none; }
+      .ep-mark { left: 24px; transform: none; }
+      .duel { grid-template-columns: 1fr; gap: 60px; padding-left: 40px; }
+      .ps-m, .ps-r { padding: 0; }
+      .c-meta { max-width: 100%; }
+      .c-img { position: relative; bottom: auto; right: auto !important; left: auto !important; width: 100%; height: 380px; margin-top: 20px; transform: none; }
+      .hero-grid { grid-template-columns: 1fr; gap: 16px; }
+      .dn-r { text-align: left; }
+    }
+
+    /* ==========================================================================
+       SCROLL EFFECT VARIETY: STAGGER, SKEW, SCALE, ROW REVEALS, GLOW PULSE
+       ========================================================================== */
+
+    /* Staggered card reveal — left cards slide from left, right from right */
+    .ps-m .card {
+      opacity: 0;
+      transform: translateX(-80px) rotateY(8deg);
+      transition: opacity 0.8s ease, transform 0.8s var(--ease);
+    }
+    .ps-r .card {
+      opacity: 0;
+      transform: translateX(80px) rotateY(-8deg);
+      transition: opacity 0.8s ease, transform 0.8s var(--ease);
+    }
+    .ep.iv .ps-m .card {
+      opacity: 1;
+      transform: translateX(0) rotateY(0deg);
+    }
+    .ep.iv .ps-r .card {
+      opacity: 1;
+      transform: translateX(0) rotateY(0deg);
+      transition-delay: 0.15s;
+    }
+
+    /* Year numeral counter-scroll drift */
+    .c-year {
+      transition: transform 0.1s linear;
+    }
+
+    /* Codex table row reveal animation */
+    .codex-t tbody tr {
+      opacity: 0;
+      transform: translateX(-40px);
+      transition: opacity 0.5s ease, transform 0.5s var(--ease);
+    }
+    .codex-t tbody tr.row-vis {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* Card border glow pulse on scroll velocity */
+    .card.vel-glow {
+      border-color: rgba(255,255,255,0.35) !important;
+      box-shadow: 0 0 30px rgba(255,255,255,0.08), inset 0 0 60px rgba(255,255,255,0.015);
+    }
+
+    /* Scale breathing — cards subtly pulse larger when centered */
+    .card.centered {
+      box-shadow: 0 50px 100px rgba(0,0,0,0.95), 0 0 60px var(--era-glow, rgba(255,255,255,0.2));
+    }
+
+    /* Horizontal velocity skew on epoch blocks */
+    .ep {
+      will-change: transform;
+    }
+
+    /* Smooth codex headline reveal */
+    .codex-h {
+      opacity: 0;
+      transform: translateY(40px) scale(0.95);
+      transition: opacity 0.8s ease, transform 0.8s var(--ease);
+    }
+    .codex-h.vis {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Spine glow intensifies with scroll speed */
+    .spine.vel-active .spine-beam {
+      box-shadow: 0 0 30px #fff, 0 0 80px rgba(255,255,255,0.5);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CRT Overlays -->
+  <div class="crt-scan"></div>
+  <div class="crt-vig"></div>
+  <div class="era-wash" id="eraWash"></div>
+  <div class="grid-bg"></div>
+  <div class="spot" id="spot"></div>
+
+  <!-- Velocity HUD -->
+  <div class="vel-hud" id="velHud">SCROLL_VEL: <span class="vv" id="velVal">0.0</span> // PITCH: <span class="vv" id="pitchVal">0.0°</span></div>
+
+  <!-- Header -->
+  <header class="t-header">
+    <div class="h-laser" id="hLaser"></div>
+    <div class="h-bar">
+      <div class="h-id">
+        <span class="ct">DOC_REF: MR-2003-2026</span>
+        <span>HISTORICAL_SURVEILLANCE // 2.5D EDITORIAL ARCHIVE</span>
+      </div>
+      <div class="h-coords">
+        <span>SAMPLING_EPOCH: <strong>23_SEASONS</strong></span>
+        <span>RESOLUTION: <strong>4K_RASTER</strong></span>
+        <span>STATUS: <strong>DECLASSIFIED</strong></span>
+      </div>
+    </div>
+    <ul class="e-scrub">
+      <li class="e-item"><button class="e-btn active" onclick="jumpTo('ep1')"><span class="eidx">EPOCH_01</span><span>2003–2004 DEBUT</span></button></li>
+      <li class="e-item"><button class="e-btn" onclick="jumpTo('ep2')"><span class="eidx">EPOCH_02</span><span>2008–2009 BALLON D'OR</span></button></li>
+      <li class="e-item"><button class="e-btn" onclick="jumpTo('ep3')"><span class="eidx">EPOCH_03</span><span>2011–2014 APEX CLÁSICO</span></button></li>
+      <li class="e-item"><button class="e-btn" onclick="jumpTo('ep4')"><span class="eidx">EPOCH_04</span><span>2016–2022 CONTINENTAL</span></button></li>
+      <li class="e-item"><button class="e-btn" onclick="jumpTo('ep5')"><span class="eidx">EPOCH_05</span><span>2023–2025 EXILE REALMS</span></button></li>
+      <li class="e-item"><button class="e-btn" onclick="jumpTo('ep6')"><span class="eidx">EPOCH_06</span><span>2026 THE CLIMAX</span></button></li>
+    </ul>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-class">
+      <span>TOP-SECRET DOSSIER // DEPT. OF SPORTS SPATIAL MEDIA</span>
+      <span>SCROLL-VELOCITY PARALLAX &amp; 3D DEPTH ENGINE</span>
+      <span>CATALONIA / MADRID / LUSAIL / MIAMI / RIYADH</span>
+    </div>
+    <div class="hero-grid">
+      <div class="dn dn-l" id="heroM">LIONEL MESSI</div>
+      <div class="vs">VS</div>
+      <div class="dn dn-r" id="heroR">CRISTIANO RONALDO</div>
+    </div>
+    <div class="hero-sub">
+      <span>CHRONOLOGY: OCTOBER 16, 2004 &mdash; AUGUST 31, 2026</span>
+      <span>DUAL-COLUMN ARCHIVAL SPECIFICATION // UNINTERRUPTED NARRATIVE</span>
+      <span>TOTAL COMPETITIVE MATCHES LOGGED: 2,340+</span>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <main class="tl">
+    <div class="spine" id="spine">
+      <div class="spine-beam" id="sBeam"></div>
+      <div class="spine-dot" id="sDot"></div>
+    </div>
+
+    <!-- EPOCH 01 // 2003–2004 -->
+    <section class="ep iv" id="ep1" data-era-m="#004d98" data-era-r="#008050">
+      <div class="ep-mark"><div class="ep-bkt">[EPOCH_01 // 2003–2004 RAW PROTOTYPES]</div><div class="ep-dot"></div></div>
+      <div class="duel">
+        <div class="ps ps-m">
+          <article class="card e04m" data-tilt>
+            <div class="c-year">2004</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2004_BCN_DEBUT]</span>
+              <h2 class="c-title">LIONEL MESSI</h2>
+              <div class="c-sub">FC BARCELONA // NO. 30 // 17 YEARS OLD</div>
+              <p class="c-body">Substituted on in the 82nd minute against RCD Espanyol on October 16, 2004. Long-haired, wearing oversized Blaugrana sleeves and yellow boots. Mentored by Ronaldinho, Messi scored his debut senior goal with an audacious, calm lob over Albacete's keeper on May 1, 2005.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="9">09</div><div class="sk">MATCHES</div></div>
+                <div class="sc"><div class="sv" data-count="1">01</div><div class="sk">DEBUT_GOAL</div></div>
+                <div class="sc"><div class="sv">1ST</div><div class="sk">LA_LIGA</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: RONALDINHO LOB ASSIST VERIFIED</div>
+            </div>
+            <div class="c-img"><img src="messi/MESSI_2004.png" onerror="this.src='https://www.footyrenders.com/render/Lionel-Messi6.png'" alt="Messi 2004"></div>
+          </article>
+        </div>
+        <div class="ps ps-r">
+          <article class="card e03r" data-tilt>
+            <div class="c-year">2003</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2003_MNU_DEBUT]</span>
+              <h2 class="c-title">CRISTIANO RONALDO</h2>
+              <div class="c-sub">SPORTING CP &amp; MAN UTD // NO. 7 // 18 YEARS OLD</div>
+              <p class="c-body">Signed by Sir Alex Ferguson after a pre-season demolition of Manchester United for Sporting CP. Debuted at Old Trafford on August 16, 2003 against Bolton. Armed with blistering stepovers and violent directness, he inherited the sacred number 7 previously worn by Best, Robson, Cantona, and Beckham.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="40">40</div><div class="sk">MATCHES</div></div>
+                <div class="sc"><div class="sv" data-count="6">06</div><div class="sk">SEASON_G</div></div>
+                <div class="sc"><div class="sv">1ST</div><div class="sk">FA_CUP_04</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: SIR ALEX FERGUSON SIGNING RECON</div>
+            </div>
+            <div class="c-img"><img src="ronaldo/RONALDO_2003.png" onerror="this.src='https://www.footyrenders.com/render/Cristiano-Ronaldo-Sporting-CP.png'" alt="Ronaldo 2003"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- EPOCH 02 // 2008–2009 -->
+    <section class="ep" id="ep2" data-era-m="#a50044" data-era-r="#da020e">
+      <div class="ep-mark"><div class="ep-bkt">[EPOCH_02 // 2008–2009 THE CORONATION]</div><div class="ep-dot"></div></div>
+      <div class="duel">
+        <div class="ps ps-m">
+          <article class="card e09m" data-tilt>
+            <div class="c-year">2009</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2009_ROME_SEXTUPLE]</span>
+              <h2 class="c-title">LIONEL MESSI</h2>
+              <div class="c-sub">FC BARCELONA // FALSE 9 &amp; SEXTUPLE CONQUEST</div>
+              <p class="c-body">Under Pep Guardiola's tactical reinvention, Messi operated as a central False 9. In the Rome UCL Final against Ronaldo's United, Messi hung suspended in the air to loop a 70th-minute header past Edwin van der Sar, losing his right boot on landing. Barcelona won all 6 trophies in 2009; Messi won his first Ballon d'Or with 473/480 votes.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="38">38</div><div class="sk">GOALS</div></div>
+                <div class="sc"><div class="sv" data-count="18">18</div><div class="sk">ASSISTS</div></div>
+                <div class="sc"><div class="sv">6/6</div><div class="sk">SEXTUPLE</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: ROME BOOT CELEBRATION CATALOGED</div>
+            </div>
+            <div class="c-img"><img src="messi/MESSI_2009.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/6/69/Celebrando_la_Copa_de_Campeones_2008-09_Cropped.jpg'" alt="Messi 2009"></div>
+          </article>
+        </div>
+        <div class="ps ps-r">
+          <article class="card e08r" data-tilt>
+            <div class="c-year">2008</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2008_MOSCOW_BALLON_DOR]</span>
+              <h2 class="c-title">CRISTIANO RONALDO</h2>
+              <div class="c-sub">MANCHESTER UNITED // CHAMPIONS LEAGUE DOUBLE</div>
+              <p class="c-body">Moscow rain, May 21, 2008. Ronaldo leaped above Michael Essien to power an unstoppable header into Petr Čech's net. Conquering the Premier League and European Cup double with 42 goals, Ronaldo swept the Ballon d'Or and FIFA World Player of the Year, claiming the pinnacle of global football.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="42">42</div><div class="sk">TOTAL_G</div></div>
+                <div class="sc"><div class="sv" data-count="8">08</div><div class="sk">UCL_GOALS</div></div>
+                <div class="sc"><div class="sv">1ST</div><div class="sk">BALLON_DOR</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: MOSCOW HEADER ALTITUDE MEASURED</div>
+            </div>
+            <div class="c-img"><img src="ronaldo/RONALDO_2008.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/9/9b/Cristiano_Ronaldo_of_Manchester_United%2C_November_5%2C_2008%2C_B.jpg'" alt="Ronaldo 2008"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- EPOCH 03 // 2011–2014 -->
+    <section class="ep" id="ep3" data-era-m="#004d98" data-era-r="#febe10">
+      <div class="ep-mark"><div class="ep-bkt">[EPOCH_03 // 2011–2014 APEX CLÁSICO]</div><div class="ep-dot"></div></div>
+      <div class="duel">
+        <div class="ps ps-m">
+          <article class="card e12m" data-tilt>
+            <div class="c-year">2012</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2012_CALENDAR_91]</span>
+              <h2 class="c-title">LIONEL MESSI</h2>
+              <div class="c-sub">FC BARCELONA // 91-GOAL CALENDAR WORLD RECORD</div>
+              <p class="c-body">An inhuman statistical singularity. Messi obliterated Gerd Müller's 1972 record of 85 goals by netting 91 goals in 69 games in 2012 (79 for Barcelona, 12 for Argentina). Striking once every 66 minutes, his skyward salute to grandmother Celia became the defining posture of an unmatched era.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="91">91</div><div class="sk">CALENDAR_G</div></div>
+                <div class="sc"><div class="sv" data-count="50">50</div><div class="sk">LA_LIGA_G</div></div>
+                <div class="sc"><div class="sv">4TH</div><div class="sk">ROW_B_DOR</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: GUINNESS WORLD RECORD 91 GOALS</div>
+            </div>
+            <div class="c-img"><img src="messi/MESSI_2012.png" onerror="this.src='https://www.footyrenders.com/render/lionel-messi-117.png'" alt="Messi 2012"></div>
+          </article>
+        </div>
+        <div class="ps ps-r">
+          <article class="card e14r" data-tilt>
+            <div class="c-year">2014</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2014_LA_DECIMA]</span>
+              <h2 class="c-title">CRISTIANO RONALDO</h2>
+              <div class="c-sub">REAL MADRID // 17 UCL GOALS HISTORIC RECORD</div>
+              <p class="c-body">The architect of Real Madrid's tenth European crown. Ronaldo established the all-time UEFA Champions League campaign record with 17 goals, dismantling Bayern Munich 4-0 in Munich before scoring Madrid's fourth in Lisbon against Atlético, tearing his kit off in muscular defiance.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="17">17</div><div class="sk">UCL_REC_G</div></div>
+                <div class="sc"><div class="sv" data-count="51">51</div><div class="sk">G_IN_47_APPS</div></div>
+                <div class="sc"><div class="sv">3RD</div><div class="sk">BALLON_DOR</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: LA DÉCIMA CAMPAIGN BENCHMARK</div>
+            </div>
+            <div class="c-img"><img src="ronaldo/RONALDO_2014.png" onerror="this.src='https://www.footyrenders.com/render/Cristiano_Ronaldo__Real_Madrid_third_Champions_League__render.png'" alt="Ronaldo 2014"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- EPOCH 04 // 2016–2022 -->
+    <section class="ep" id="ep4" data-era-m="#75aadb" data-era-r="#da291c">
+      <div class="ep-mark"><div class="ep-bkt">[EPOCH_04 // 2016–2022 CONTINENTAL SUPREMACY]</div><div class="ep-dot"></div></div>
+      <div class="duel">
+        <div class="ps ps-m">
+          <article class="card e22m" data-tilt>
+            <div class="c-year">2022</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2022_LUSAIL_SUPREMACY]</span>
+              <h2 class="c-title">LIONEL MESSI</h2>
+              <div class="c-sub">ARGENTINA // WORLD CUP CHAMPION &amp; GOLDEN BALL</div>
+              <p class="c-body">In the greatest final in World Cup history at Lusail Stadium, Messi scored twice against France and converted in the shootout. Scoring in the Round of 16, Quarter-final, Semi-final, and Final, Messi was draped in the ceremonial black Bisht before raising the World Cup, definitively completing association football.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="7">07</div><div class="sk">WC_GOALS</div></div>
+                <div class="sc"><div class="sv" data-count="3">03</div><div class="sk">WC_ASSISTS</div></div>
+                <div class="sc"><div class="sv">8TH</div><div class="sk">BALLON_DOR</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: CEREMONIAL BISHT LIFT LOGGED</div>
+            </div>
+            <div class="c-img"><img src="messi/MESSI_2022.png" onerror="this.src='https://www.footyrenders.com/render/lionel-messi-405.png'" alt="Messi 2022"></div>
+          </article>
+        </div>
+        <div class="ps ps-r">
+          <article class="card e16r" data-tilt>
+            <div class="c-year">2016</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2016_STADE_DE_FRANCE]</span>
+              <h2 class="c-title">CRISTIANO RONALDO</h2>
+              <div class="c-sub">PORTUGAL // CAPTAIN'S EURO SILVERWARE</div>
+              <p class="c-body">Carrying Portugal through Euro 2016 with an iconic header against Wales and crucial brace against Hungary, Ronaldo was injured in the final against France. Bandaged and limping, he stood beside manager Fernando Santos on the sideline directing tactics until Éder's extra-time winner secured Portugal's first major title.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv">1ST</div><div class="sk">EURO_TITLE</div></div>
+                <div class="sc"><div class="sv" data-count="6">06</div><div class="sk">G+A_IMPACT</div></div>
+                <div class="sc"><div class="sv">4TH</div><div class="sk">BALLON_DOR</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: SIDELINE CAPTAINCY RECONSTRUCTED</div>
+            </div>
+            <div class="c-img"><img src="ronaldo/RONALDO_2016.png" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/e/e1/1_cristiano_ronaldo_2016.jpg'" alt="Ronaldo 2016"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- EPOCH 05 // 2023–2025 -->
+    <section class="ep" id="ep5" data-era-m="#f7b5cd" data-era-r="#fff000">
+      <div class="ep-mark"><div class="ep-bkt">[EPOCH_05 // 2023–2025 EXILE REALMS]</div><div class="ep-dot"></div></div>
+      <div class="duel">
+        <div class="ps ps-m">
+          <article class="card e23m" data-tilt>
+            <div class="c-year">2023</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2023_MIAMI_REVOLUTION]</span>
+              <h2 class="c-title">LIONEL MESSI</h2>
+              <div class="c-sub">INTER MIAMI CF // LEAGUES CUP CHAMPION</div>
+              <p class="c-body">Landing in MLS, Messi converted a 94th-minute free-kick winner on debut. He steered Inter Miami from last place in the league to their first piece of silverware in franchise history, scoring 10 goals in 7 Leagues Cup matches while collecting his record 8th Ballon d'Or in Paris.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="10">10</div><div class="sk">LEAGUES_G</div></div>
+                <div class="sc"><div class="sv">1ST</div><div class="sk">CLUB_TROPHY</div></div>
+                <div class="sc"><div class="sv">8TH</div><div class="sk">BALLON_DOR</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: 94TH MIN FREE-KICK DEBUT RECORDED</div>
+            </div>
+            <div class="c-img"><img src="messi/MESSI_2023.png" onerror="this.src='https://www.footyrenders.com/render/lionel-messi-408.png'" alt="Messi 2023"></div>
+          </article>
+        </div>
+        <div class="ps ps-r">
+          <article class="card e23r" data-tilt>
+            <div class="c-year">2023</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2023_RIYADH_VANGUARD]</span>
+              <h2 class="c-title">CRISTIANO RONALDO</h2>
+              <div class="c-sub">AL-NASSR FC // 54 GOALS WORLD TOP SCORER</div>
+              <p class="c-body">Pioneering a tectonic shift to the Saudi Pro League, Ronaldo donned Al-Nassr's yellow kit and finished as the world's top goalscorer in 2023 with 54 goals at age 38. Scoring twice in extra-time to win the Arab Club Champions Cup, his SIUU echoed across Asia.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="54">54</div><div class="sk">2023_TOP_G</div></div>
+                <div class="sc"><div class="sv" data-count="35">35</div><div class="sk">SPL_GOALS</div></div>
+                <div class="sc"><div class="sv">1ST</div><div class="sk">ARAB_CHAMP</div></div>
+              </div>
+              <div class="c-stamp">+ TELEMETRY: 2023 GLOBAL TOP SCORER ACCREDITED</div>
+            </div>
+            <div class="c-img"><img src="ronaldo/RONALDO_2023.png" onerror="this.src='https://www.footyrenders.com/render/cristiano-ronaldo-509.png'" alt="Ronaldo 2023"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- EPOCH 06 // 2026 -->
+    <section class="ep" id="ep6" data-era-m="#d4af37" data-era-r="#fff000">
+      <div class="ep-mark"><div class="ep-bkt">[EPOCH_06 // 2026 THE CLIMAX ARCHIVE]</div><div class="ep-dot"></div></div>
+      <div class="duel">
+        <div class="ps ps-m">
+          <article class="card e26m" data-tilt>
+            <div class="c-year">2026</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2026_ALBICELESTE_SUNSET]</span>
+              <h2 class="c-title">LIONEL MESSI</h2>
+              <div class="c-sub">ARGENTINA // RETIREMENT: AUGUST 31, 2026</div>
+              <p class="c-body">On August 31, 2026, Lionel Messi finalized his international career. Having captained Argentina through their World Cup title defense in North America, the 39-year-old removed his captain's armband in front of a weeping Buenos Aires stadium, bidding farewell with 207 caps and 125 international goals.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv" data-count="207">207</div><div class="sk">CAPS_TOTAL</div></div>
+                <div class="sc"><div class="sv" data-count="125">125</div><div class="sk">INT_GOALS</div></div>
+                <div class="sc"><div class="sv" data-count="4">04</div><div class="sk">INT_TROPHIES</div></div>
+              </div>
+              <div class="c-stamp">+ STATUS: AUGUST 31, 2026 INTERNATIONAL FAREWELL</div>
+            </div>
+            <div class="c-img"><img src="messi/MESSI_2026_RETIREMENT.png" onerror="this.src='https://www.footyrenders.com/render/lionel-messi-404.png'" alt="Messi 2026"></div>
+          </article>
+        </div>
+        <div class="ps ps-r">
+          <article class="card e26r" data-tilt>
+            <div class="c-year">2026</div>
+            <div class="c-meta">
+              <span class="c-pill">[ARCHIVE_REF: 2026_900_TITAN_MILESTONE]</span>
+              <h2 class="c-title">CRISTIANO RONALDO</h2>
+              <div class="c-sub">PORTUGAL &amp; AL-NASSR // 900+ OFFICIAL GOALS</div>
+              <p class="c-body">At 41 years old, Cristiano Ronaldo crossed the 900 official career competitive goals milestone. Defying athletic aging for Portugal and Al-Nassr, Ronaldo cemented his immortal status as the highest official goalscorer in association football history.</p>
+              <div class="c-stats">
+                <div class="sc"><div class="sv">900+</div><div class="sk">CAREER_GOALS</div></div>
+                <div class="sc"><div class="sv">130+</div><div class="sk">PORTUGAL_G</div></div>
+                <div class="sc"><div class="sv">1200+</div><div class="sk">CAREER_APPS</div></div>
+              </div>
+              <div class="c-stamp">+ STATUS: ALL-TIME OFFICIAL TOP SCORER RECORD</div>
+            </div>
+            <div class="c-img"><img src="ronaldo/RONALDO_2026.png" onerror="this.src='https://www.footyrenders.com/render/cristiano-ronaldo-507.png'" alt="Ronaldo 2026"></div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Codex -->
+  <footer class="codex">
+    <div class="codex-c">
+      <div class="codex-st">// ARCHIVAL LEDGER: 2003–2026 FULL AUDIT</div>
+      <h2 class="codex-h">TWO GODS. 23 SEASONS. ZERO PRECEDENT.</h2>
+      <table class="codex-t">
+        <thead><tr><th>PARAMETRIC METRIC</th><th>LIONEL MESSI (ARG)</th><th>CRISTIANO RONALDO (POR)</th><th>HISTORICAL VARIANCE</th></tr></thead>
+        <tbody>
+          <tr><td class="ml">Ballon d'Or Awards</td><td class="scr" data-count="8">0</td><td class="scr" data-count="5">0</td><td>+3 Messi (All-Time Record)</td></tr>
+          <tr><td class="ml">European Golden Shoes</td><td class="scr" data-count="6">0</td><td class="scr" data-count="4">0</td><td>+2 Messi</td></tr>
+          <tr><td class="ml">UEFA Champions League Titles</td><td class="scr" data-count="4">0</td><td class="scr" data-count="5">0</td><td>+1 Ronaldo (Modern Record)</td></tr>
+          <tr><td class="ml">Total Official Career Goals</td><td class="scr" data-count="850">0</td><td class="scr" data-count="900">0</td><td>+50+ Ronaldo (All-Time Leader)</td></tr>
+          <tr><td class="ml">Total Career Assists</td><td class="scr" data-count="380">0</td><td class="scr" data-count="255">0</td><td>+125+ Messi</td></tr>
+          <tr><td class="ml">FIFA World Cup Trophies</td><td class="scr" data-count="1">0</td><td class="scr" data-count="0">0</td><td>+1 Messi (Golden Ball 2014, 2022)</td></tr>
+          <tr><td class="ml">Total Career Team Trophies</td><td class="scr" data-count="44">0</td><td class="scr" data-count="35">0</td><td>+9 Messi (Most Decorated Player)</td></tr>
+        </tbody>
+      </table>
+      <div class="codex-f">
+        <span>ARCHIVE COMPILATION DATE: SEPTEMBER 2026</span>
+        <span>HYPER-KINETIC 2.5D HARDWARE ENGINE // SCROLL-VELOCITY PHYSICS</span>
+        <span>DISTRIBUTION: PUBLIC HISTORICAL RECORD</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ======================================================================
+       SCROLL-VELOCITY PHYSICS ENGINE // rAF + 3D TILT + CHROMATIC ABERRATION
+       ====================================================================== -->
+  <script>
+  (function(){
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+
+    const cards = $$('[data-tilt]');
+    const epochs = $$('.ep');
+    const btns = $$('.e-btn');
+    const spine = $('#spine');
+    const sBeam = $('#sBeam');
+    const sDot  = $('#sDot');
+    const hLaser = $('#hLaser');
+    const spot = $('#spot');
+    const eraWash = $('#eraWash');
+    const heroM = $('#heroM');
+    const heroR = $('#heroR');
+    const velVal = $('#velVal');
+    const pitchVal = $('#pitchVal');
+    const codexH = $('.codex-h');
+    const codexRows = $$('.codex-t tbody tr');
+
+    // State
+    let lastY = window.pageYOffset || 0;
+    let vel = 0;
+    let smoothVel = 0;
+    let smoothSkew = 0;
+
+    // Per-card state
+    const cState = new Map();
+    cards.forEach(c => {
+      cState.set(c, { rx: 0, ry: 0, tx: 0, ty: 0, hov: false });
+      c.addEventListener('mousemove', e => {
+        const s = cState.get(c);
+        s.hov = true;
+        const r = c.getBoundingClientRect();
+        s.tx = -((e.clientY - (r.top + r.height/2)) / (r.height/2)) * 12;
+        s.ty =  ((e.clientX - (r.left + r.width/2)) / (r.width/2)) * 12;
+      });
+      c.addEventListener('mouseleave', () => {
+        const s = cState.get(c);
+        s.hov = false; s.tx = 0; s.ty = 0;
+      });
+    });
+
+    // Ambient spotlight
+    window.addEventListener('mousemove', e => {
+      if(spot) { spot.style.left = e.clientX+'px'; spot.style.top = e.clientY+'px'; }
+    }, {passive:true});
+
+    // Stat counter animation (cards + codex table)
+    const counted = new Set();
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if(en.isIntersecting && !counted.has(en.target)) {
+          counted.add(en.target);
+          const target = parseInt(en.target.dataset.count);
+          if(isNaN(target)) return;
+          if(target === 0) { en.target.textContent = '0'; return; }
+          const isLarge = target > 100;
+          const duration = isLarge ? 60 : 40;
+          let frame = 0;
+          const tick = () => {
+            frame++;
+            // Eased count: cubic ease-out
+            const t = Math.min(frame / duration, 1);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const cur = Math.round(eased * target);
+            if(isLarge && cur >= target) {
+              en.target.textContent = target + '+';
+            } else {
+              en.target.textContent = cur < 10 && !isLarge ? '0'+cur : cur;
+            }
+            if(t < 1) requestAnimationFrame(tick);
+          };
+          tick();
+        }
+      });
+    }, {threshold: 0.3});
+    $$('[data-count]').forEach(el => io.observe(el));
+
+    // Codex table row staggered reveal
+    const rowIO = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if(en.isIntersecting) {
+          const row = en.target;
+          const idx = codexRows.indexOf(row);
+          setTimeout(() => row.classList.add('row-vis'), idx * 120);
+        }
+      });
+    }, {threshold: 0.2});
+    codexRows.forEach(r => rowIO.observe(r));
+
+    // Codex headline reveal
+    const codexIO = new IntersectionObserver(entries => {
+      entries.forEach(en => { if(en.isIntersecting) en.target.classList.add('vis'); });
+    }, {threshold: 0.3});
+    if(codexH) codexIO.observe(codexH);
+
+    // Era ambient color map
+    const eraColors = {
+      ep1: ['rgba(0,77,152,0.25)', 'rgba(0,128,80,0.25)'],
+      ep2: ['rgba(165,0,68,0.25)', 'rgba(218,2,14,0.25)'],
+      ep3: ['rgba(0,77,152,0.2)', 'rgba(254,190,16,0.25)'],
+      ep4: ['rgba(117,170,219,0.25)', 'rgba(218,41,28,0.25)'],
+      ep5: ['rgba(247,181,205,0.25)', 'rgba(255,240,0,0.2)'],
+      ep6: ['rgba(212,175,55,0.3)', 'rgba(255,240,0,0.3)']
+    };
+
+    // RAF Loop
+    function render() {
+      const now = window.pageYOffset || 0;
+      const vh = window.innerHeight;
+      const docH = document.documentElement.scrollHeight - vh;
+      const pct = docH > 0 ? now / docH : 0;
+
+      // 1. Scroll Velocity Physics
+      const rawVel = now - lastY;
+      lastY = now;
+      vel = rawVel;
+      smoothVel += (vel - smoothVel) * 0.12;
+      const clampedPitch = Math.max(-15, Math.min(15, smoothVel * 0.4));
+      const absV = Math.abs(smoothVel);
+
+      // Horizontal skew (damped separately for smoothness)
+      smoothSkew += (smoothVel * -0.15 - smoothSkew) * 0.08;
+      const clampedSkew = Math.max(-5, Math.min(5, smoothSkew));
+
+      // 2. HUD
+      if(velVal) velVal.textContent = absV.toFixed(1);
+      if(pitchVal) pitchVal.textContent = clampedPitch.toFixed(1) + '°';
+
+      // 3. Header Progress Laser
+      if(hLaser) hLaser.style.width = (pct * 100).toFixed(1) + '%';
+
+      // 4. Spine Fill + velocity glow
+      if(spine && sBeam && sDot) {
+        const h = spine.clientHeight;
+        const fill = pct * h;
+        sBeam.style.height = fill.toFixed(1) + 'px';
+        sDot.style.transform = 'translate3d(0,' + Math.max(0, fill - 26).toFixed(1) + 'px,0)';
+        // Spine glow on fast scroll
+        if(absV > 4) spine.classList.add('vel-active');
+        else spine.classList.remove('vel-active');
+      }
+
+      // 5. Hero chromatic aberration
+      if(absV > 3) {
+        const shift = (smoothVel * 0.5).toFixed(1);
+        const ts = shift+'px 0 #ff003c, '+(-shift)+'px 0 #00e5ff';
+        if(heroM) heroM.style.textShadow = ts;
+        if(heroR) heroR.style.textShadow = ts;
+      } else {
+        if(heroM) heroM.style.textShadow = 'none';
+        if(heroR) heroR.style.textShadow = 'none';
+      }
+
+      // 6. Epoch processing
+      let activeEp = null;
+      let minDist = Infinity;
+      const vc = vh / 2;
+
+      epochs.forEach((ep, idx) => {
+        const r = ep.getBoundingClientRect();
+        const ec = r.top + r.height / 2;
+        const d = Math.abs(ec - vc);
+
+        if(r.top < vh * 0.85 && r.bottom > vh * 0.15) ep.classList.add('iv');
+        if(d < minDist) { minDist = d; activeEp = ep; }
+
+        // NEW: Horizontal skew on epoch blocks based on scroll velocity
+        ep.style.transform = ep.classList.contains('iv')
+          ? 'translateY(0) skewX(' + clampedSkew.toFixed(2) + 'deg)'
+          : 'translateY(60px) skewX(0deg)';
+      });
+
+      // Dynamic era ambient wash
+      if(activeEp && eraWash) {
+        const cols = eraColors[activeEp.id];
+        if(cols) {
+          document.documentElement.style.setProperty('--era-a1', cols[0]);
+          document.documentElement.style.setProperty('--era-a2', cols[1]);
+        }
+      }
+
+      // Active epoch scrubber
+      if(activeEp) {
+        const aid = activeEp.id;
+        btns.forEach(b => {
+          if(b.getAttribute('onclick').includes(aid)) b.classList.add('active');
+          else b.classList.remove('active');
+        });
+      }
+
+      // 7. Card transforms: pitch + tilt + parallax + effects
+      cards.forEach(c => {
+        const s = cState.get(c);
+        const r = c.getBoundingClientRect();
+        const cardCenter = r.top + r.height / 2;
+        const distFromCenter = Math.abs(cardCenter - vc);
+        const isCentered = distFromCenter < vh * 0.35;
+
+        // Lerp mouse tilt
+        s.rx += (s.tx - s.rx) * 0.12;
+        s.ry += (s.ty - s.ry) * 0.12;
+
+        // Combine: scroll velocity pitch + mouse tilt
+        const finalRx = s.rx + clampedPitch;
+        const finalRy = s.ry;
+
+        // Scale breathing: cards centered in viewport scale up slightly
+        const scaleFactor = isCentered ? 1.015 : 1.0;
+
+        c.style.transform = 'rotateX('+finalRx.toFixed(2)+'deg) rotateY('+finalRy.toFixed(2)+'deg) scale('+scaleFactor+')';
+
+        // Centered class for enhanced glow
+        if(isCentered) c.classList.add('centered');
+        else c.classList.remove('centered');
+
+        // Border glow pulse on velocity
+        if(absV > 6) c.classList.add('vel-glow');
+        else c.classList.remove('vel-glow');
+
+        // Card-level chromatic aberration on titles
+        const title = c.querySelector('.c-title');
+        if(title) {
+          if(absV > 5) {
+            const sh = (smoothVel * 0.35).toFixed(1);
+            title.style.textShadow = sh+'px 0 #ff003c, '+(-sh)+'px 0 #00e5ff';
+          } else {
+            title.style.textShadow = 'none';
+          }
+        }
+
+        // Parallax on cutout images
+        const img = c.querySelector('.c-img img');
+        if(img) {
+          const norm = Math.max(-1.5, Math.min(1.5, (cardCenter - vc) / (vh / 2)));
+          img.style.transform = 'translate3d(0,' + (norm * 30).toFixed(1) + 'px,0)';
+        }
+
+        // Year numeral counter-scroll drift (moves opposite to scroll)
+        const yearEl = c.querySelector('.c-year');
+        if(yearEl) {
+          const drift = ((cardCenter - vc) / vh * -40).toFixed(1);
+          yearEl.style.transform = 'translateZ(-100px) translateY(' + drift + 'px)';
+        }
+      });
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+
+    // Scrubber Jump
+    window.jumpTo = function(id) {
+      const el = document.getElementById(id);
+      if(el) {
+        const y = el.getBoundingClientRect().top + (window.pageYOffset||0) - 130;
+        window.scrollTo({top: y, behavior: 'smooth'});
+      }
+    };
+  })();
+  </script>
+</body>
+</html>
