@@ -343,16 +343,385 @@
     .codex-t .scr { font-family: var(--fd); font-size: 24px; font-weight: 900; color: var(--bone); }
     .codex-f { margin-top: 40px; font-size: 10px; letter-spacing: 1.5px; color: var(--dim); text-transform: uppercase; display: flex; justify-content: space-between; }
 
-    /* RESPONSIVE */
-    @media (max-width: 1100px) {
-      .spine { left: 24px; transform: none; }
-      .ep-mark { left: 24px; transform: none; }
-      .duel { grid-template-columns: 1fr; gap: 60px; padding-left: 40px; }
-      .ps-m, .ps-r { padding: 0; }
-      .c-meta { max-width: 100%; }
-      .c-img { position: relative; bottom: auto; right: auto !important; left: auto !important; width: 100%; height: 380px; margin-top: 20px; transform: none; }
-      .hero-grid { grid-template-columns: 1fr; gap: 16px; }
-      .dn-r { text-align: left; }
+    /* ==========================================================================
+       RESPONSIVE & MOBILE ARCHITECTURE // PORTRAIT STREAM & WIDESCREEN LANDSCAPE
+       ========================================================================== */
+
+    /* Codex Table Scroll Wrapper */
+    .codex-table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: var(--hair-b) transparent;
+      margin-bottom: 12px;
+    }
+    .codex-swipe-hint {
+      display: none;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--slate);
+      text-transform: uppercase;
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    /* Landscape Orientation Hint Banner on Portrait Mobile */
+    .orient-hint {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      background: rgba(8, 10, 14, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      padding: 8px 18px;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+      color: var(--bone);
+      font-family: var(--fm);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      animation: orientPulse 3s ease-in-out infinite;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    @keyframes orientPulse {
+      0%, 100% { border-color: rgba(255, 255, 255, 0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+      50% { border-color: rgba(255, 215, 0, 0.6); box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 25px rgba(255, 215, 0, 0.25); }
+    }
+    .orient-hint .oh-icon {
+      font-size: 14px;
+      color: #ffd700;
+      animation: spinSlow 6s linear infinite;
+    }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .orient-hint .oh-close {
+      background: transparent;
+      border: none;
+      color: var(--slate);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 4px;
+      transition: color 0.2s;
+    }
+    .orient-hint .oh-close:hover { color: var(--bone); }
+    .orient-hint.dismissed { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(20px); }
+
+    /* Hide orient-hint on desktop and in landscape mode */
+    @media (min-width: 1025px), (orientation: landscape) {
+      .orient-hint { display: none !important; }
+    }
+
+    /* --------------------------------------------------------------------------
+       1. TABLET & MOBILE PORTRAIT MODE (<= 1024px portrait, <= 768px)
+       -------------------------------------------------------------------------- */
+    @media (max-width: 1024px) and (orientation: portrait), (max-width: 768px) {
+      .orient-hint { display: flex; }
+      .codex-swipe-hint { display: block; }
+      .vel-hud { display: none; }
+
+      /* Header */
+      .h-bar { padding: 8px 16px; }
+      .h-id { font-size: 10px; gap: 8px; }
+      .h-coords { display: none; }
+      .e-scrub {
+        min-height: 42px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      .e-scrub::-webkit-scrollbar { display: none; }
+      .e-item { min-width: 125px; }
+      .e-btn { padding: 8px 12px; }
+      .e-btn span:last-child { font-size: 10px; }
+
+      /* Hero */
+      .hero { padding: 120px 16px 45px; }
+      .hero-class {
+        flex-direction: column;
+        gap: 4px;
+        font-size: 9px;
+        margin-bottom: 18px;
+        padding-bottom: 8px;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        text-align: center;
+      }
+      .dn {
+        font-size: clamp(34px, 9vw, 56px);
+        text-align: center;
+        line-height: 0.95;
+      }
+      .vs {
+        align-self: center;
+        justify-self: center;
+        font-size: 14px;
+        padding: 4px 14px;
+      }
+      .hero-sub {
+        flex-direction: column;
+        gap: 6px;
+        font-size: 10px;
+        text-align: center;
+      }
+
+      /* Single-Column Timeline Stream */
+      .tl { padding: 50px 14px 100px; }
+      .spine { left: 16px; transform: none; width: 2px; }
+      .spine-dot { left: -4px; width: 10px; height: 40px; }
+      .ep-mark {
+        left: 16px;
+        transform: none;
+        align-items: flex-start;
+      }
+      .ep-bkt {
+        font-size: 9px;
+        padding: 4px 10px;
+        letter-spacing: 1.5px;
+      }
+      .duel {
+        grid-template-columns: 1fr;
+        gap: 45px;
+        padding-left: 24px;
+      }
+      .ps { padding: 0 !important; }
+
+      /* Symmetrical Left-Aligned Cards */
+      .card {
+        padding: 32px 20px 24px;
+        min-height: auto;
+      }
+      .c-meta {
+        max-width: 100% !important;
+        text-align: left !important;
+        margin: 0 !important;
+        align-items: flex-start !important;
+      }
+      .ps-r .c-meta {
+        text-align: left;
+        align-items: flex-start;
+      }
+      .ps-r .c-pill {
+        border-left: 2px solid var(--bone);
+        border-right: none;
+        padding-left: 8px;
+        padding-right: 0;
+      }
+      .ps-r .c-stamp {
+        align-self: flex-start;
+      }
+      .ps-r .c-year {
+        left: auto;
+        right: 12px;
+      }
+      .c-year {
+        font-size: clamp(90px, 20vw, 130px);
+        top: 6px;
+        right: 12px;
+        opacity: 0.05;
+      }
+      .c-title {
+        font-size: 26px;
+        line-height: 1.1;
+      }
+      .c-sub {
+        font-size: 10px;
+        margin-bottom: 14px;
+      }
+      .c-body {
+        font-size: 12px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        padding-top: 12px;
+      }
+      .c-stats {
+        margin-bottom: 16px;
+      }
+      .sc { padding: 10px 8px; }
+      .sv { font-size: 22px; }
+      .sk { font-size: 8px; }
+      .c-stamp { font-size: 9px; padding: 4px 10px; }
+
+      /* Mobile Portrait Player Cutouts */
+      .c-img {
+        position: relative;
+        bottom: auto;
+        left: auto !important;
+        right: auto !important;
+        width: 100%;
+        height: 320px;
+        margin-top: 18px;
+        transform: translateZ(40px) !important;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+      }
+      .c-img img {
+        max-height: 300px;
+        max-width: 100%;
+        object-fit: contain;
+      }
+      .e09m .c-img, .e08r .c-img {
+        width: 100%;
+        height: 300px;
+        margin-top: 16px;
+      }
+      .e09m .c-img img, .e08r .c-img img {
+        max-height: 280px;
+      }
+      .e22m .c-img {
+        width: 100%;
+        height: 260px;
+        margin-top: 16px;
+      }
+      .e22m .c-img img {
+        max-height: 240px;
+      }
+
+      /* Codex Section Mobile */
+      .codex { padding: 60px 16px 100px; }
+      .codex-h { font-size: clamp(24px, 7vw, 36px); margin-bottom: 24px; }
+      .codex-t { min-width: 600px; }
+      .codex-t th, .codex-t td { padding: 14px 16px; font-size: 12px; }
+      .codex-t .scr { font-size: 20px; }
+      .codex-f {
+        flex-direction: column;
+        gap: 8px;
+        text-align: center;
+        margin-top: 30px;
+      }
+    }
+
+    /* --------------------------------------------------------------------------
+       2. SPECIALIZED WIDESCREEN LANDSCAPE MODE (Phones/Tablets rotated horizontally)
+       -------------------------------------------------------------------------- */
+    @media (orientation: landscape) and (max-height: 600px), (min-width: 580px) and (max-width: 1024px) and (orientation: landscape) {
+      .vel-hud { display: none; }
+      .codex-swipe-hint { display: block; }
+
+      /* Compact Slim Header for Landscape */
+      .t-header { background: rgba(5,6,8,0.98); }
+      .h-bar {
+        padding: 4px 18px;
+        font-size: 9px;
+      }
+      .h-id { gap: 8px; }
+      .h-coords { gap: 14px; font-size: 9px; }
+      .e-scrub {
+        min-height: 32px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .e-item { min-width: 110px; }
+      .e-btn {
+        padding: 4px 8px;
+        flex-direction: row;
+        align-items: baseline;
+        gap: 6px;
+      }
+      .e-btn .eidx { font-size: 8px; }
+      .e-btn span:last-child { font-size: 9px; }
+
+      /* Landscape Hero */
+      .hero { padding: 75px 24px 35px; }
+      .hero-class {
+        font-size: 9px;
+        margin-bottom: 12px;
+        padding-bottom: 6px;
+      }
+      .hero-grid {
+        grid-template-columns: 1fr auto 1fr;
+        gap: 18px;
+        margin-bottom: 12px;
+      }
+      .dn { font-size: clamp(26px, 5.5vw, 50px); }
+      .vs { font-size: 13px; padding: 3px 10px; }
+      .hero-sub { font-size: 9px; margin-top: 10px; }
+
+      /* Dual-Column Clásico Grid in Landscape */
+      .tl { padding: 40px 24px 100px; }
+      .spine { left: 50%; transform: translateX(-50%); }
+      .ep-mark { left: 50%; transform: translate(-50%, 0); }
+      .ep-bkt { font-size: 9px; padding: 4px 12px; }
+      .duel {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+      .ps-m { padding-right: 12px; }
+      .ps-r { padding-left: 12px; }
+
+      /* Balanced Cards in Landscape */
+      .card {
+        padding: 24px 18px 20px;
+        min-height: 410px;
+      }
+      .c-meta { max-width: 64%; }
+      .c-year { font-size: clamp(80px, 14vw, 130px); top: -4px; }
+      .c-title { font-size: 22px; margin-bottom: 4px; }
+      .c-sub { font-size: 9.5px; margin-bottom: 10px; }
+      .c-body {
+        font-size: 11px;
+        line-height: 1.45;
+        margin-bottom: 12px;
+        padding-top: 8px;
+      }
+      .c-stats { margin-bottom: 10px; }
+      .sc { padding: 6px 6px; }
+      .sv { font-size: 18px; }
+      .sk { font-size: 7.5px; }
+      .c-stamp { font-size: 8px; padding: 3px 8px; }
+
+      /* Landscape Cutouts */
+      .c-img {
+        position: absolute;
+        bottom: 0px;
+        width: 210px;
+        height: 330px;
+      }
+      .ps-m .c-img { right: 8px; }
+      .ps-r .c-img { left: 8px; }
+      .c-img img { max-height: 310px; }
+
+      .e09m .c-img { width: 220px; height: 280px; right: 8px; }
+      .e08r .c-img { width: 190px; height: 280px; left: 8px; }
+      .e09m .c-img img, .e08r .c-img img { max-height: 265px; }
+
+      .e22m .c-img { width: 230px; height: 240px; right: 8px; bottom: 10px; }
+      .e22m .c-img img { max-height: 225px; }
+
+      /* Codex in Landscape */
+      .codex { padding: 60px 24px 100px; }
+      .codex-h { font-size: 28px; margin-bottom: 24px; }
+      .codex-t th, .codex-t td { padding: 12px 16px; font-size: 12px; }
+      .codex-t .scr { font-size: 20px; }
+    }
+
+    /* --------------------------------------------------------------------------
+       3. EXTRA-SMALL MOBILE SCREENS (<= 380px)
+       -------------------------------------------------------------------------- */
+    @media (max-width: 380px) {
+      .h-bar { padding: 6px 12px; }
+      .h-id span:last-child { display: none; }
+      .hero { padding: 105px 12px 35px; }
+      .dn { font-size: 30px; }
+      .tl { padding: 40px 8px 80px; }
+      .duel { padding-left: 18px; gap: 36px; }
+      .card { padding: 24px 14px 18px; }
+      .c-title { font-size: 22px; }
+      .c-body { font-size: 11.5px; }
+      .sv { font-size: 19px; }
+      .c-img { height: 260px; }
+      .c-img img { max-height: 240px; }
     }
 
     /* ==========================================================================
@@ -613,6 +982,13 @@
 
   <!-- Velocity HUD -->
   <div class="vel-hud" id="velHud">SCROLL_VEL: <span class="vv" id="velVal">0.0</span> // PITCH: <span class="vv" id="pitchVal">0.0°</span></div>
+
+  <!-- Mobile Landscape Orientation Hint Banner -->
+  <div class="orient-hint" id="orientHint">
+    <span class="oh-icon">⟳</span>
+    <span>ROTATE FOR WIDESCREEN DUAL CLÁSICO</span>
+    <button class="oh-close" onclick="dismissHint(event)" aria-label="Dismiss">&times;</button>
+  </div>
 
   <!-- Header -->
   <header class="t-header">
@@ -928,18 +1304,21 @@
     <div class="codex-c">
       <div class="codex-st">// ARCHIVAL LEDGER: 2003–2026 FULL AUDIT</div>
       <h2 class="codex-h">TWO GODS. 23 SEASONS. ZERO PRECEDENT.</h2>
-      <table class="codex-t">
-        <thead><tr><th>PARAMETRIC METRIC</th><th>LIONEL MESSI (ARG)</th><th>CRISTIANO RONALDO (POR)</th><th>HISTORICAL VARIANCE</th></tr></thead>
-        <tbody>
-          <tr><td class="ml">Ballon d'Or Awards</td><td class="scr" data-count="8">0</td><td class="scr" data-count="5">0</td><td>+3 Messi (All-Time Record)</td></tr>
-          <tr><td class="ml">European Golden Shoes</td><td class="scr" data-count="6">0</td><td class="scr" data-count="4">0</td><td>+2 Messi</td></tr>
-          <tr><td class="ml">UEFA Champions League Titles</td><td class="scr" data-count="4">0</td><td class="scr" data-count="5">0</td><td>+1 Ronaldo (Modern Record)</td></tr>
-          <tr><td class="ml">Total Official Career Goals</td><td class="scr" data-count="850">0</td><td class="scr" data-count="900">0</td><td>+50+ Ronaldo (All-Time Leader)</td></tr>
-          <tr><td class="ml">Total Career Assists</td><td class="scr" data-count="380">0</td><td class="scr" data-count="255">0</td><td>+125+ Messi</td></tr>
-          <tr><td class="ml">FIFA World Cup Trophies</td><td class="scr" data-count="1">0</td><td class="scr" data-count="0">0</td><td>+1 Messi (Golden Ball 2014, 2022)</td></tr>
-          <tr><td class="ml">Total Career Team Trophies</td><td class="scr" data-count="44">0</td><td class="scr" data-count="35">0</td><td>+9 Messi (Most Decorated Player)</td></tr>
-        </tbody>
-      </table>
+      <div class="codex-table-wrap">
+        <table class="codex-t">
+          <thead><tr><th>PARAMETRIC METRIC</th><th>LIONEL MESSI (ARG)</th><th>CRISTIANO RONALDO (POR)</th><th>HISTORICAL VARIANCE</th></tr></thead>
+          <tbody>
+            <tr><td class="ml">Ballon d'Or Awards</td><td class="scr" data-count="8">0</td><td class="scr" data-count="5">0</td><td>+3 Messi (All-Time Record)</td></tr>
+            <tr><td class="ml">European Golden Shoes</td><td class="scr" data-count="6">0</td><td class="scr" data-count="4">0</td><td>+2 Messi</td></tr>
+            <tr><td class="ml">UEFA Champions League Titles</td><td class="scr" data-count="4">0</td><td class="scr" data-count="5">0</td><td>+1 Ronaldo (Modern Record)</td></tr>
+            <tr><td class="ml">Total Official Career Goals</td><td class="scr" data-count="850">0</td><td class="scr" data-count="900">0</td><td>+50+ Ronaldo (All-Time Leader)</td></tr>
+            <tr><td class="ml">Total Career Assists</td><td class="scr" data-count="380">0</td><td class="scr" data-count="255">0</td><td>+125+ Messi</td></tr>
+            <tr><td class="ml">FIFA World Cup Trophies</td><td class="scr" data-count="1">0</td><td class="scr" data-count="0">0</td><td>+1 Messi (Golden Ball 2014, 2022)</td></tr>
+            <tr><td class="ml">Total Career Team Trophies</td><td class="scr" data-count="44">0</td><td class="scr" data-count="35">0</td><td>+9 Messi (Most Decorated Player)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="codex-swipe-hint">◄ SWIPE HORIZONTALLY TO EXPLORE FULL ARCHIVE ►</div>
       <div class="codex-f">
         <span>ARCHIVE COMPILATION DATE: SEPTEMBER 2026</span>
         <span>HYPER-KINETIC 2.5D HARDWARE ENGINE // SCROLL-VELOCITY PHYSICS</span>
@@ -982,6 +1361,8 @@
     const cState = new Map();
     cards.forEach(c => {
       cState.set(c, { rx: 0, ry: 0, tx: 0, ty: 0, hov: false });
+
+      // Mouse interactive tilt
       c.addEventListener('mousemove', e => {
         const s = cState.get(c);
         s.hov = true;
@@ -993,12 +1374,60 @@
         const s = cState.get(c);
         s.hov = false; s.tx = 0; s.ty = 0;
       });
+
+      // Mobile Touch Interactive Tilt
+      c.addEventListener('touchstart', () => {
+        const s = cState.get(c);
+        s.hov = true;
+      }, {passive:true});
+      c.addEventListener('touchmove', e => {
+        const s = cState.get(c);
+        if(!e.touches || !e.touches[0]) return;
+        const t = e.touches[0];
+        const r = c.getBoundingClientRect();
+        if(t.clientY >= r.top && t.clientY <= r.bottom && t.clientX >= r.left && t.clientX <= r.right) {
+          s.tx = -((t.clientY - (r.top + r.height/2)) / (r.height/2)) * 10;
+          s.ty =  ((t.clientX - (r.left + r.width/2)) / (r.width/2)) * 10;
+        }
+      }, {passive:true});
+      c.addEventListener('touchend', () => {
+        const s = cState.get(c);
+        s.hov = false; s.tx = 0; s.ty = 0;
+      }, {passive:true});
     });
+
+    // Mobile Gyroscope 3D Tilt (when device is physically tilted)
+    if(window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', e => {
+        if(e.gamma === null || e.beta === null) return;
+        const gamma = Math.max(-25, Math.min(25, e.gamma)); // roll [-90,90]
+        const beta = Math.max(-25, Math.min(25, e.beta - 40)); // pitch [-180,180]
+        cards.forEach(c => {
+          const s = cState.get(c);
+          if(!s.hov) {
+            s.tx = beta * 0.22;
+            s.ty = gamma * 0.22;
+          }
+        });
+      }, {passive:true});
+    }
 
     // Ambient spotlight
     window.addEventListener('mousemove', e => {
       if(spot) { spot.style.left = e.clientX+'px'; spot.style.top = e.clientY+'px'; }
     }, {passive:true});
+
+    // Dismiss orientation hint
+    window.dismissHint = function(e) {
+      if(e) e.stopPropagation();
+      const h = $('#orientHint');
+      if(h) h.classList.add('dismissed');
+      sessionStorage.setItem('orient_hint_dismissed', '1');
+    };
+    if(sessionStorage.getItem('orient_hint_dismissed') === '1') {
+      const h = $('#orientHint');
+      if(h) h.classList.add('dismissed');
+    }
 
     // Stat counter engine (animates on enter, resets on exit for dynamic restart)
     const activeCounters = new Map();
@@ -1237,11 +1666,13 @@
 
     requestAnimationFrame(render);
 
-    // Scrubber Jump
+    // Scrubber Jump (dynamic offset based on actual header height)
     window.jumpTo = function(id) {
       const el = document.getElementById(id);
       if(el) {
-        const y = el.getBoundingClientRect().top + (window.pageYOffset||0) - 130;
+        const header = document.querySelector('.t-header');
+        const offset = header ? header.offsetHeight + 18 : 110;
+        const y = el.getBoundingClientRect().top + (window.pageYOffset||0) - offset;
         window.scrollTo({top: y, behavior: 'smooth'});
       }
     };
