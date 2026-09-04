@@ -248,12 +248,27 @@
       left: 10px;
     }
 
-    /* Z:+100px PLAYER CUTOUT — ALIGNED WITHIN CARD BOUNDARIES */
+    /* Z:+100px PLAYER CUTOUT — CINEMATIC STAGGERED ENTRANCE */
     .c-img {
       position: absolute; bottom: 0px; width: 340px; height: 520px;
       pointer-events: none; z-index: 30;
       transform: translateZ(100px); transform-style: preserve-3d;
       display: flex; align-items: flex-end; justify-content: center; overflow: visible;
+      /* Entrance & Exit: smooth deblur on enter, quick blur-out on exit */
+      opacity: 0;
+      filter: blur(8px) brightness(1.3);
+      transition:
+        opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.4s var(--ease);
+    }
+    .ep.iv .c-img {
+      opacity: 1;
+      filter: blur(0px) brightness(1);
+      transition:
+        opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+        filter 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.4s var(--ease);
     }
     .ps-m .c-img { right: 15px; }
     .ps-r .c-img { left: 15px; }
@@ -262,7 +277,7 @@
       filter: drop-shadow(0 25px 40px rgba(0,0,0,0.95)) drop-shadow(0 0 20px var(--era-rim, rgba(255,255,255,0.15)));
       will-change: transform, filter; transition: transform 0.3s var(--ease), filter 0.4s;
     }
-    .card:hover .c-img { transform: translateZ(140px) scale(1.06); }
+    .card:hover .c-img { transform: translateZ(140px) scale(1.06); transition-delay: 0s; filter: blur(0) brightness(1); }
     .card:hover .c-img img {
       filter: drop-shadow(0 35px 60px rgba(0,0,0,0.95)) drop-shadow(0 0 35px var(--era-rim, #fff)) drop-shadow(0 0 80px var(--era-glow, rgba(255,255,255,0.3)));
     }
@@ -278,6 +293,7 @@
     }
     .e09m:hover .c-img, .e08r:hover .c-img {
       transform: translateY(-50%) translateZ(140px) scale(1.06);
+      transition-delay: 0s;
     }
     .e09m .c-img {
       width: 350px;
@@ -343,31 +359,73 @@
        SCROLL EFFECT VARIETY: STAGGER, SKEW, SCALE, ROW REVEALS, GLOW PULSE
        ========================================================================== */
 
-    /* Staggered card reveal — left cards slide from left, right from right */
-    .ps-m .card {
+    /* =================================================================
+       VARIED CARD ENTRANCES — UNIQUE PER EPOCH, SMOOTH EXPO EASING
+       ================================================================= */
+    .ps-m .card, .ps-r .card {
       opacity: 0;
-      transform: translateX(-80px) rotateY(8deg);
-      transition: opacity 0.8s ease, transform 0.8s var(--ease);
-    }
-    .ps-r .card {
-      opacity: 0;
-      transform: translateX(80px) rotateY(-8deg);
-      transition: opacity 0.8s ease, transform 0.8s var(--ease);
-    }
-    .ep.iv .ps-m .card {
-      opacity: 1;
-      transform: translateX(0) rotateY(0deg);
-    }
-    .ep.iv .ps-r .card {
-      opacity: 1;
-      transform: translateX(0) rotateY(0deg);
-      transition-delay: 0.15s;
+      transition:
+        opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Year numeral counter-scroll drift */
-    .c-year {
-      transition: transform 0.1s linear;
+    /* EPOCH 01: Classic side-slide with subtle perspective tilt */
+    #ep1 .ps-m .card { transform: translateX(-80px) rotateY(8deg); }
+    #ep1 .ps-r .card { transform: translateX(80px) rotateY(-8deg); }
+
+    /* EPOCH 02: Rise from below with forward lean */
+    #ep2 .ps-m .card { transform: translateY(70px) rotateX(5deg) scale(0.94); }
+    #ep2 .ps-r .card { transform: translateY(70px) rotateX(-4deg) scale(0.94); }
+
+    /* EPOCH 03: Diagonal sweep — dramatic entrance */
+    #ep3 .ps-m .card { transform: translateX(-55px) translateY(45px) rotateY(5deg); }
+    #ep3 .ps-r .card { transform: translateX(55px) translateY(45px) rotateY(-5deg); }
+
+    /* EPOCH 04: Scale bloom — cards expand outward from center */
+    #ep4 .ps-m .card { transform: scale(0.86) rotateX(4deg); }
+    #ep4 .ps-r .card { transform: scale(0.86) rotateX(-4deg); }
+
+    /* EPOCH 05: Wide lateral sweep with tighter rotation */
+    #ep5 .ps-m .card { transform: translateX(-100px) rotateY(12deg) scale(0.96); }
+    #ep5 .ps-r .card { transform: translateX(100px) rotateY(-12deg) scale(0.96); }
+
+    /* EPOCH 06: Grand curtain — deep rise with scale for climax weight */
+    #ep6 .ps-m .card { transform: translateY(60px) scale(0.88) rotateX(7deg); }
+    #ep6 .ps-r .card { transform: translateY(60px) scale(0.88) rotateX(-7deg); }
+
+    /* All cards resolved state */
+    .ep.iv .ps-m .card,
+    .ep.iv .ps-r .card {
+      opacity: 1;
+      transform: translateX(0) translateY(0) rotateX(0deg) rotateY(0deg) scale(1);
+      transition:
+        opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
+    /* Right card enters slightly after left */
+    .ep.iv .ps-r .card { transition-delay: 0.18s; }
+
+    /* =================================================================
+       CUTOUT IMAGE STAGGER — VARIED DELAYS PER EPOCH FOR ORGANIC FEEL
+       ================================================================= */
+    #ep1.iv .ps-m .c-img { transition-delay: 0.50s; }
+    #ep1.iv .ps-r .c-img { transition-delay: 0.70s; }
+
+    #ep2.iv .ps-m .c-img { transition-delay: 0.75s; }
+    #ep2.iv .ps-r .c-img { transition-delay: 0.95s; }
+
+    #ep3.iv .ps-m .c-img { transition-delay: 0.55s; }
+    #ep3.iv .ps-r .c-img { transition-delay: 0.85s; }
+
+    #ep4.iv .ps-m .c-img { transition-delay: 0.65s; }
+    #ep4.iv .ps-r .c-img { transition-delay: 0.80s; }
+
+    #ep5.iv .ps-m .c-img { transition-delay: 0.60s; }
+    #ep5.iv .ps-r .c-img { transition-delay: 0.90s; }
+
+    #ep6.iv .ps-m .c-img { transition-delay: 0.80s; }
+    #ep6.iv .ps-r .c-img { transition-delay: 1.05s; }
+
 
     /* Codex table row reveal animation */
     .codex-t tbody tr {
@@ -411,6 +469,137 @@
     .spine.vel-active .spine-beam {
       box-shadow: 0 0 30px #fff, 0 0 80px rgba(255,255,255,0.5);
     }
+
+    /* =================================================================
+       COMPREHENSIVE PAGE TRANSITIONS
+       ================================================================= */
+
+    /* ---- HERO SECTION: STAGGERED LOAD ENTRANCE ---- */
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroScaleIn {
+      from { opacity: 0; transform: scale(0.88); letter-spacing: 6px; }
+      to   { opacity: 1; transform: scale(1); letter-spacing: 2px; }
+    }
+    @keyframes vsPulse {
+      0%   { opacity: 0; transform: scale(0.5); border-color: transparent; }
+      60%  { opacity: 1; transform: scale(1.15); border-color: rgba(255,255,255,0.4); }
+      100% { opacity: 1; transform: scale(1); border-color: var(--hair); }
+    }
+
+    .hero-class {
+      opacity: 0;
+      animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+    }
+    .dn-l {
+      opacity: 0;
+      animation: heroFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+    }
+    .dn-r {
+      opacity: 0;
+      animation: heroFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    }
+    .vs {
+      opacity: 0;
+      animation: vsPulse 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.55s forwards;
+    }
+    .hero-sub {
+      opacity: 0;
+      animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+    }
+
+    /* ---- HEADER NAV: STAGGERED SCRUBBER ENTRANCE ---- */
+    .e-item {
+      opacity: 0;
+      animation: heroFadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .e-item:nth-child(1) { animation-delay: 0.3s; }
+    .e-item:nth-child(2) { animation-delay: 0.4s; }
+    .e-item:nth-child(3) { animation-delay: 0.5s; }
+    .e-item:nth-child(4) { animation-delay: 0.6s; }
+    .e-item:nth-child(5) { animation-delay: 0.7s; }
+    .e-item:nth-child(6) { animation-delay: 0.8s; }
+
+    /* ---- EPOCH MARKER: SLIDE DOWN + GLOW ---- */
+    .ep-bkt {
+      opacity: 0;
+      transform: translateY(-18px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                  border-color 0.4s, color 0.4s, box-shadow 0.4s;
+    }
+    .ep.iv .ep-bkt {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .ep-dot {
+      transform: scale(0);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s,
+                  background 0.4s, box-shadow 0.4s;
+    }
+    .ep.iv .ep-dot {
+      transform: scale(1);
+    }
+
+    /* ---- YEAR WATERMARK: SOFT REVEAL ---- */
+    .c-year {
+      opacity: 0;
+      transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.1s,
+                  transform 0.1s linear;
+    }
+    .ep.iv .c-year {
+      opacity: 1;
+    }
+
+    /* ---- CARD INTERNAL CONTENT: STAGGERED CASCADE ---- */
+    .c-pill, .c-title, .c-sub, .c-body, .c-stats, .c-stamp {
+      opacity: 0;
+      transform: translateY(16px);
+      transition:
+        opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Left-side (Messi) card content cascade */
+    .ep.iv .ps-m .c-pill   { opacity: 1; transform: translateY(0); transition-delay: 0.12s; }
+    .ep.iv .ps-m .c-title  { opacity: 1; transform: translateY(0); transition-delay: 0.20s; }
+    .ep.iv .ps-m .c-sub    { opacity: 1; transform: translateY(0); transition-delay: 0.28s; }
+    .ep.iv .ps-m .c-body   { opacity: 1; transform: translateY(0); transition-delay: 0.38s; }
+    .ep.iv .ps-m .c-stats  { opacity: 1; transform: translateY(0); transition-delay: 0.46s; }
+    .ep.iv .ps-m .c-stamp  { opacity: 1; transform: translateY(0); transition-delay: 0.54s; }
+
+    /* Right-side (Ronaldo) card content cascade — offset +0.18s */
+    .ep.iv .ps-r .c-pill   { opacity: 1; transform: translateY(0); transition-delay: 0.30s; }
+    .ep.iv .ps-r .c-title  { opacity: 1; transform: translateY(0); transition-delay: 0.38s; }
+    .ep.iv .ps-r .c-sub    { opacity: 1; transform: translateY(0); transition-delay: 0.46s; }
+    .ep.iv .ps-r .c-body   { opacity: 1; transform: translateY(0); transition-delay: 0.56s; }
+    .ep.iv .ps-r .c-stats  { opacity: 1; transform: translateY(0); transition-delay: 0.64s; }
+    .ep.iv .ps-r .c-stamp  { opacity: 1; transform: translateY(0); transition-delay: 0.72s; }
+
+    /* ---- CUTOUT ARRIVAL GLOW PULSE ---- */
+    @keyframes cutoutGlow {
+      0%   { filter: drop-shadow(0 0 0 transparent); }
+      40%  { filter: drop-shadow(0 0 40px var(--era-rim, rgba(255,255,255,0.5))); }
+      100% { filter: drop-shadow(0 25px 40px rgba(0,0,0,0.95)) drop-shadow(0 0 20px var(--era-rim, rgba(255,255,255,0.15))); }
+    }
+    .ep.iv .c-img img {
+      animation: cutoutGlow 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s both;
+    }
+
+    /* ---- CODEX FOOTER: FADE UP ---- */
+    .codex-f {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease 0.4s, transform 0.8s var(--ease) 0.4s;
+    }
+    .codex-h.vis ~ .codex-t ~ .codex-f,
+    .codex-f.vis {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
   </style>
 </head>
 <body>
@@ -476,7 +665,7 @@
     </div>
 
     <!-- EPOCH 01 // 2003–2004 -->
-    <section class="ep iv" id="ep1" data-era-m="#004d98" data-era-r="#008050">
+    <section class="ep" id="ep1" data-era-m="#004d98" data-era-r="#008050">
       <div class="ep-mark"><div class="ep-bkt">[EPOCH_01 // 2003–2004 RAW PROTOTYPES]</div><div class="ep-dot"></div></div>
       <div class="duel">
         <div class="ps ps-m">
@@ -811,54 +1000,74 @@
       if(spot) { spot.style.left = e.clientX+'px'; spot.style.top = e.clientY+'px'; }
     }, {passive:true});
 
-    // Stat counter animation (cards + codex table)
-    const counted = new Set();
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(en => {
-        if(en.isIntersecting && !counted.has(en.target)) {
-          counted.add(en.target);
-          const target = parseInt(en.target.dataset.count);
-          if(isNaN(target)) return;
-          if(target === 0) { en.target.textContent = '0'; return; }
-          const isLarge = target > 100;
-          const duration = isLarge ? 60 : 40;
-          let frame = 0;
-          const tick = () => {
-            frame++;
-            // Eased count: cubic ease-out
-            const t = Math.min(frame / duration, 1);
-            const eased = 1 - Math.pow(1 - t, 3);
-            const cur = Math.round(eased * target);
-            if(isLarge && cur >= target) {
-              en.target.textContent = target + '+';
-            } else {
-              en.target.textContent = cur < 10 && !isLarge ? '0'+cur : cur;
-            }
-            if(t < 1) requestAnimationFrame(tick);
-          };
-          tick();
+    // Stat counter engine (animates on enter, resets on exit for dynamic restart)
+    const activeCounters = new Map();
+    function runCounter(el) {
+      const target = parseInt(el.dataset.count);
+      if(isNaN(target)) return;
+      if(target === 0) { el.textContent = '0'; return; }
+      const isLarge = target > 100;
+      const duration = isLarge ? 55 : 38;
+      let frame = 0;
+      if(activeCounters.has(el)) cancelAnimationFrame(activeCounters.get(el));
+      const tick = () => {
+        frame++;
+        const t = Math.min(frame / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        const cur = Math.round(eased * target);
+        if(isLarge && cur >= target) {
+          el.textContent = target + '+';
+        } else {
+          el.textContent = cur < 10 && !isLarge ? '0'+cur : cur;
         }
-      });
-    }, {threshold: 0.3});
-    $$('[data-count]').forEach(el => io.observe(el));
+        if(t < 1) {
+          activeCounters.set(el, requestAnimationFrame(tick));
+        } else {
+          activeCounters.delete(el);
+        }
+      };
+      activeCounters.set(el, requestAnimationFrame(tick));
+    }
 
-    // Codex table row staggered reveal
+    function resetCounter(el) {
+      if(activeCounters.has(el)) {
+        cancelAnimationFrame(activeCounters.get(el));
+        activeCounters.delete(el);
+      }
+      const target = parseInt(el.dataset.count);
+      if(isNaN(target)) return;
+      const isLarge = target > 100;
+      el.textContent = isLarge ? '0' : '00';
+    }
+
+    // Codex table row staggered reveal + counter restart
     const rowIO = new IntersectionObserver(entries => {
       entries.forEach(en => {
+        const row = en.target;
+        const idx = codexRows.indexOf(row);
         if(en.isIntersecting) {
-          const row = en.target;
-          const idx = codexRows.indexOf(row);
-          setTimeout(() => row.classList.add('row-vis'), idx * 120);
+          setTimeout(() => {
+            row.classList.add('row-vis');
+            row.querySelectorAll('[data-count]').forEach(runCounter);
+          }, idx * 100);
+        } else {
+          row.classList.remove('row-vis');
+          row.querySelectorAll('[data-count]').forEach(resetCounter);
         }
       });
-    }, {threshold: 0.2});
+    }, {threshold: 0.15});
     codexRows.forEach(r => rowIO.observe(r));
 
-    // Codex headline reveal
+    // Codex headline + footer reveal
     const codexIO = new IntersectionObserver(entries => {
-      entries.forEach(en => { if(en.isIntersecting) en.target.classList.add('vis'); });
-    }, {threshold: 0.3});
+      entries.forEach(en => {
+        if(en.isIntersecting) en.target.classList.add('vis');
+        else en.target.classList.remove('vis');
+      });
+    }, {threshold: 0.2});
     if(codexH) codexIO.observe(codexH);
+    const codexF = $('.codex-f');
+    if(codexF) codexIO.observe(codexF);
 
     // Era ambient color map
     const eraColors = {
@@ -927,11 +1136,24 @@
         const r = ep.getBoundingClientRect();
         const ec = r.top + r.height / 2;
         const d = Math.abs(ec - vc);
+        const isIv = ep.classList.contains('iv');
 
-        if(r.top < vh * 0.85 && r.bottom > vh * 0.15) ep.classList.add('iv');
+        // Dynamic in-view with hysteresis: renders in on approach, reverse renders out on leave
+        if(!isIv) {
+          if(r.top < vh * 0.82 && r.bottom > vh * 0.18) {
+            ep.classList.add('iv');
+            ep.querySelectorAll('.c-stats [data-count]').forEach(runCounter);
+          }
+        } else {
+          if(r.top > vh * 0.88 || r.bottom < vh * 0.10) {
+            ep.classList.remove('iv');
+            ep.querySelectorAll('.c-stats [data-count]').forEach(resetCounter);
+          }
+        }
+
         if(d < minDist) { minDist = d; activeEp = ep; }
 
-        // NEW: Horizontal skew on epoch blocks based on scroll velocity
+        // Horizontal skew on epoch blocks based on scroll velocity
         ep.style.transform = ep.classList.contains('iv')
           ? 'translateY(0) skewX(' + clampedSkew.toFixed(2) + 'deg)'
           : 'translateY(60px) skewX(0deg)';
