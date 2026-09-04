@@ -267,6 +267,32 @@
       filter: drop-shadow(0 35px 60px rgba(0,0,0,0.95)) drop-shadow(0 0 35px var(--era-rim, #fff)) drop-shadow(0 0 80px var(--era-glow, rgba(255,255,255,0.3)));
     }
 
+    /* EPOCH 02 BALLON D'OR CUTOUTS: BALANCED, SCALED & VERTICALLY CENTERED */
+    .e09m .c-img, .e08r .c-img {
+      top: 50%;
+      bottom: auto;
+      transform: translateY(-50%) translateZ(100px);
+      align-items: center;
+      justify-content: center;
+      height: 480px;
+    }
+    .e09m:hover .c-img, .e08r:hover .c-img {
+      transform: translateY(-50%) translateZ(140px) scale(1.06);
+    }
+    .e09m .c-img {
+      width: 360px;
+      right: -30px;
+    }
+    .e08r .c-img {
+      width: 330px;
+      left: -30px;
+    }
+    .e09m .c-img img, .e08r .c-img img {
+      max-height: 440px;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
     /* Era Accents */
     .e04m { --era-rim: rgba(0,77,152,0.9); --era-glow: rgba(0,77,152,0.4); }
     .e03r { --era-rim: rgba(0,128,80,0.9); --era-glow: rgba(0,128,80,0.4); }
